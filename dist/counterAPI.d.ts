@@ -13,12 +13,13 @@ export interface CountsQuery {
     name: string;
     group_by: GroupByTypes;
     order?: OrderByTypes;
+    hash?: boolean;
 }
 export declare class CounterAPI {
     axios: AxiosInstance;
     constructor();
-    up(name: string): Promise<Counter>;
-    down(name: string): Promise<Counter>;
-    get(name: string): Promise<Counter>;
+    up(name: string, hash?: boolean): Promise<Counter>;
+    down(name: string, hash?: boolean): Promise<Counter>;
+    get(name: string, hash?: boolean): Promise<Counter>;
     counts(query: CountsQuery): Promise<Count[]>;
 }
