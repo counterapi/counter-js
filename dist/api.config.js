@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.apiConfig = void 0;
 var qs = require("qs");
-var BASE_URL = "http://localhost:3000/v1/";
+var BASE_URL = "https://api.counterapi.dev/v1/";
 exports.apiConfig = {
     returnRejectedPromiseOnError: true,
     withCredentials: true,
