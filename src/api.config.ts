@@ -1,8 +1,7 @@
 import * as qs from "qs";
 import { PathLike } from "fs";
 
-const BASE_URL = "http://localhost:3000/v1/";
-// const BASE_URL = "https://api.counterapi.dev/v1/"
+const BASE_URL = "https://api.counterapi.dev/v1/";
 
 export const apiConfig = {
   returnRejectedPromiseOnError: true,
