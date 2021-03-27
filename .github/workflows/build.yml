@@ -65,6 +65,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - uses: fregante/setup-git-user@v1
+
       - run: npm version ${{ steps.get_version.outputs.VERSION }}
 
       - run: npm publish
