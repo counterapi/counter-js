@@ -1,13 +1,16 @@
 {
-  "name": "typescript-package",
-  "version": "0.1.0",
-  "description": "TypeScript package",
+  "name": "counterapi",
+  "version": "0.2.0",
+  "description": "Counter API for your application",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "lint": "tslint -p tsconfig.json",
     "test": "jest --config jestconfig.json"
+  },
+  "dependencies": {
+    "axios": "^0.21.1"
   },
   "devDependencies": {
     "@types/jest": "^26.0.22",
@@ -22,12 +25,6 @@
     "type": "git",
     "url": "git+https://github.com/counterapi/counter-js.git"
   },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
-  },
-  "author": "Omegion <oomegion@gmail.com>",
-  "license": "MIT",
-  "dependencies": {
-    "axios": "^0.21.1"
-  }
+  "author": "omegion <oomegion@gmail.com>",
+  "license": "MIT"
 }
