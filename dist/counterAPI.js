@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.CounterAPI = exports.OrderByTypes = exports.GroupByTypes = void 0;
 var api_config_1 = require("./api.config");
 var axios_1 = require("axios");
@@ -51,19 +51,19 @@ var OrderByTypes;
     OrderByTypes["ASC"] = "asc";
     OrderByTypes["DESC"] = "desc";
 })(OrderByTypes = exports.OrderByTypes || (exports.OrderByTypes = {}));
-var CounterAPI = /** @class */ (function () {
+var CounterAPI = (function () {
     function CounterAPI() {
-        this.axios = axios_1["default"].create(api_config_1.apiConfig);
+        this.axios = axios_1.default.create(api_config_1.apiConfig);
     }
     CounterAPI.prototype.up = function (name) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.axios
+                    case 0: return [4, this.axios
                             .get("up", {
                             params: {
-                                name: name
-                            }
+                                name: name,
+                            },
                         })
                             .then(function (res) {
                             return new counter_1.Counter({
@@ -71,12 +71,13 @@ var CounterAPI = /** @class */ (function () {
                                 Name: res.data.name,
                                 Count: res.data.count,
                                 UpdatedAt: res.data.updated_at,
-                                CreatedAt: res.data.created_at
+                                CreatedAt: res.data.created_at,
                             });
-                        })["catch"](function (err) {
+                        })
+                            .catch(function (err) {
                             throw new Error(err);
                         })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 1: return [2, _a.sent()];
                 }
             });
         });
@@ -85,11 +86,11 @@ var CounterAPI = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.axios
+                    case 0: return [4, this.axios
                             .get("down", {
                             params: {
-                                name: name
-                            }
+                                name: name,
+                            },
                         })
                             .then(function (res) {
                             return new counter_1.Counter({
@@ -97,12 +98,13 @@ var CounterAPI = /** @class */ (function () {
                                 Name: res.data.name,
                                 Count: res.data.count,
                                 UpdatedAt: res.data.updated_at,
-                                CreatedAt: res.data.created_at
+                                CreatedAt: res.data.created_at,
                             });
-                        })["catch"](function (err) {
+                        })
+                            .catch(function (err) {
                             throw new Error(err);
                         })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 1: return [2, _a.sent()];
                 }
             });
         });
@@ -111,11 +113,11 @@ var CounterAPI = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.axios
+                    case 0: return [4, this.axios
                             .get("get", {
                             params: {
-                                name: name
-                            }
+                                name: name,
+                            },
                         })
                             .then(function (res) {
                             return new counter_1.Counter({
@@ -123,12 +125,13 @@ var CounterAPI = /** @class */ (function () {
                                 Name: res.data.name,
                                 Count: res.data.count,
                                 UpdatedAt: res.data.updated_at,
-                                CreatedAt: res.data.created_at
+                                CreatedAt: res.data.created_at,
                             });
-                        })["catch"](function (err) {
+                        })
+                            .catch(function (err) {
                             throw new Error(err);
                         })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 1: return [2, _a.sent()];
                 }
             });
         });
@@ -137,23 +140,24 @@ var CounterAPI = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.axios
+                    case 0: return [4, this.axios
                             .get("counts", {
-                            params: query
+                            params: query,
                         })
                             .then(function (res) {
                             var counts = [];
                             res.data.forEach(function (row) {
                                 counts.push(new counter_1.Count({
                                     Count: row.count,
-                                    Date: row.date
+                                    Date: row.date,
                                 }));
                             });
                             return counts;
-                        })["catch"](function (err) {
+                        })
+                            .catch(function (err) {
                             throw new Error(err);
                         })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 1: return [2, _a.sent()];
                 }
             });
         });
@@ -161,3 +165,4 @@ var CounterAPI = /** @class */ (function () {
     return CounterAPI;
 }());
 exports.CounterAPI = CounterAPI;
+//# sourceMappingURL=counterAPI.js.map
