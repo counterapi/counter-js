@@ -22,6 +22,9 @@
     "type": "git",
     "url": "git+https://github.com/counterapi/counter-js.git"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "author": "Omegion <oomegion@gmail.com>",
   "license": "MIT",
   "dependencies": {
