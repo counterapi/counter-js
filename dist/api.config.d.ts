@@ -1,4 +1,3 @@
-import { PathLike } from "fs";
 export declare const apiConfig: {
     returnRejectedPromiseOnError: boolean;
     withCredentials: boolean;
@@ -6,12 +5,10 @@ export declare const apiConfig: {
     baseURL: string;
     headers: {
         common: {
-            "Cache-Control": string;
-            Pragma: string;
             "Content-Type": string;
             Accept: string;
         };
     };
-    paramsSerializer: (params: PathLike) => any;
+    paramsSerializer: (params: any) => any;
     validateStatus: (status: any) => boolean;
 };

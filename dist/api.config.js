@@ -5,13 +5,11 @@ var qs = require("qs");
 var BASE_URL = "https://api.counterapi.dev/v1/";
 exports.apiConfig = {
     returnRejectedPromiseOnError: true,
-    withCredentials: true,
+    withCredentials: false,
     timeout: 30000,
     baseURL: BASE_URL,
     headers: {
         common: {
-            "Cache-Control": "no-cache, no-store, must-revalidate",
-            Pragma: "no-cache",
             "Content-Type": "application/json",
             Accept: "application/json",
         },
