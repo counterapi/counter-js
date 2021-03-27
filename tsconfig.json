@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "removeComments": true,
+    "noImplicitAny": false,
+    "declaration": true
+  },
+  "files": [
+    "src/index.ts"
+  ],
+  "compileOnSave": false,
+  "buildOnSave": false
+}
