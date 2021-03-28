@@ -43,7 +43,9 @@ var counter_1 = require("./counter");
 var hash_1 = require("./hash");
 var GroupByTypes;
 (function (GroupByTypes) {
+    GroupByTypes["Hour"] = "hour";
     GroupByTypes["Day"] = "day";
+    GroupByTypes["Week"] = "week";
     GroupByTypes["Month"] = "month";
     GroupByTypes["Year"] = "year";
 })(GroupByTypes = exports.GroupByTypes || (exports.GroupByTypes = {}));

@@ -1,7 +1,9 @@
 import { AxiosInstance } from "axios";
 import { Count, Counter } from "./counter";
 export declare enum GroupByTypes {
+    Hour = "hour",
     Day = "day",
+    Week = "week",
     Month = "month",
     Year = "year"
 }
