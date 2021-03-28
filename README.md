@@ -8,7 +8,7 @@
     <img src="https://img.shields.io/npm/dm/counterapi.svg" alt="Downloads"></a>
     <img src="https://img.shields.io/github/workflow/status/counterapi/counter-js/ci" alt="Check"></a>
     <a href="https://www.npmjs.com/package/counterapi"><img src="https://img.shields.io/npm/v/counterapi.svg" alt="Version"></a>
-    <a href="https://github.com/counterapi/counter-js/blob/master/LICENSE"><img src="https://img.shields.io/github/license/counterapi/counter-go" alt="License"></a>
+    <a href="https://github.com/counterapi/counter-js/blob/master/LICENSE"><img src="https://img.shields.io/github/license/counterapi/counter-js" alt="License"></a>
 </p>
 
 ## Documentation
