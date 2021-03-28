@@ -22,11 +22,11 @@ Check out our docs at https://counterapi.dev/.
 ### Increase by Name
 
 ```typescript
-import {API} from "./api";
+import {CounterAPI} from "counterapi";
 
-const api = new API();
+const counter = new CounterAPI();
 
-api.up("test").then((res) => {
+counter.up("test").then((res) => {
     console.log(res)
 })
 ```
@@ -46,11 +46,11 @@ Counter {
 ### Decrease by Name
 
 ```typescript
-import {API} from "./api";
+import {CounterAPI} from "counterapi";
 
-const api = new API();
+const counter = new CounterAPI();
 
-api.down("test").then((res) => {
+counter.down("test").then((res) => {
     console.log(res)
 })
 ```
@@ -70,11 +70,11 @@ Counter {
 ### Get by Name
 
 ```typescript
-import {API} from "./api";
+import {CounterAPI} from "counterapi";
 
-const api = new API();
+const counter = new CounterAPI();
 
-api.get("test").then((res) => {
+counter.get("test").then((res) => {
     console.log(res)
 })
 ```
@@ -94,9 +94,9 @@ Counter {
 ### Get Count List by Name
 
 ```typescript
-import {API, GroupByTypes, OrderByTypes} from "./api";
+import {CounterAPI, GroupByTypes, OrderByTypes} from "counterapi";
 
-const api = new API();
+const counter = new CounterAPI();
 
 const q = {
     name: "test",
@@ -104,7 +104,7 @@ const q = {
     order_by: OrderByTypes.ASC,
 };
 
-api.counts(q).then((res) => {
+counter.counts(q).then((res) => {
     console.log(res);
 });
 ```
