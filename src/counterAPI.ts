@@ -4,7 +4,9 @@ import { Count, Counter } from "./counter";
 import { Hash } from "./hash";
 
 export enum GroupByTypes {
+  Hour = "hour",
   Day = "day",
+  Week = "week",
   Month = "month",
   Year = "year",
 }
