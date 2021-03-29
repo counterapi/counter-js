@@ -154,6 +154,39 @@ var CounterAPI = (function () {
             });
         });
     };
+    CounterAPI.prototype.set = function (name, count, hash) {
+        if (hash === void 0) { hash = false; }
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (hash) {
+                            name = hash_1.Hash.create(name);
+                        }
+                        return [4, this.axios
+                                .get("set", {
+                                params: {
+                                    name: name,
+                                    count: count,
+                                },
+                            })
+                                .then(function (res) {
+                                return new counter_1.Counter({
+                                    ID: res.data.id,
+                                    Name: res.data.name,
+                                    Count: res.data.count,
+                                    UpdatedAt: res.data.updated_at,
+                                    CreatedAt: res.data.created_at,
+                                });
+                            })
+                                .catch(function (err) {
+                                throw new Error(err);
+                            })];
+                    case 1: return [2, _a.sent()];
+                }
+            });
+        });
+    };
     CounterAPI.prototype.counts = function (query) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {

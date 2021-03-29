@@ -23,5 +23,6 @@ export declare class CounterAPI {
     up(name: string, hash?: boolean): Promise<Counter>;
     down(name: string, hash?: boolean): Promise<Counter>;
     get(name: string, hash?: boolean): Promise<Counter>;
+    set(name: string, count: number, hash?: boolean): Promise<Counter>;
     counts(query: CountsQuery): Promise<Count[]>;
 }
