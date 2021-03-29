@@ -93,6 +93,18 @@ it("returns down API successfully", async () => {
   expect(actual.Count).toEqual(14);
 });
 
+it("returns set API successfully", async () => {
+  mockedAxios.get.mockResolvedValue(mockedResponse);
+
+  const api = new CounterAPI();
+  const actual = await api.set("test", 14);
+
+  expect(axios.get).toHaveBeenCalled();
+  expect(actual.ID).toEqual(1);
+  expect(actual.Name).toEqual("test");
+  expect(actual.Count).toEqual(14);
+});
+
 it("returns count list API successfully", async () => {
   mockedAxios.get.mockResolvedValue(mockedCountListResponse);
 

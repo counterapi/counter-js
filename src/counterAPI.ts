@@ -105,6 +105,36 @@ export class CounterAPI {
       });
   }
 
+  async set(
+    name: string,
+    count: number,
+    hash: boolean = false
+  ): Promise<Counter> {
+    if (hash) {
+      name = Hash.create(name);
+    }
+
+    return await this.axios
+      .get("set", {
+        params: {
+          name,
+          count,
+        },
+      })
+      .then((res) => {
+        return new Counter({
+          ID: res.data.id,
+          Name: res.data.name,
+          Count: res.data.count,
+          UpdatedAt: res.data.updated_at,
+          CreatedAt: res.data.created_at,
+        });
+      })
+      .catch((err) => {
+        throw new Error(err);
+      });
+  }
+
   async counts(query: CountsQuery): Promise<Count[]> {
     if (query.hash) {
       query.name = Hash.create(query.name);
