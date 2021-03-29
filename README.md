@@ -91,6 +91,30 @@ Counter {
 }
 ```
 
+### Set by Name
+
+```typescript
+import {CounterAPI} from "counterapi";
+
+const counter = new CounterAPI();
+
+counter.set("test", 10).then((res) => {
+    console.log(res)
+})
+```
+
+Output
+
+```shell
+Counter {
+  ID: 1,
+  Name: 'test',
+  Count: 10,
+  UpdatedAt: '2021-03-27T13:33:51.315934+01:00',
+  CreatedAt: '2021-03-26T21:46:18.624369+08:00'
+}
+```
+
 ### Get Count List by Name
 
 ```typescript
