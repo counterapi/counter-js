@@ -1,4 +1,4 @@
-import * as crypto from "crypto";
+import crypto from "crypto-js";
 
 export class Hash {
   static create(str: string): string {

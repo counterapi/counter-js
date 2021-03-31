@@ -10,7 +10,8 @@
     "test": "jest --config jestconfig.json"
   },
   "dependencies": {
-    "axios": "^0.21.1"
+    "axios": "^0.21.1",
+    "crypto-js": "^4.0.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.22",
