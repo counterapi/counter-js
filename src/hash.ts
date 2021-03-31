@@ -1,7 +1,6 @@
-import crypto from "crypto-js";
-
 export class Hash {
   static create(str: string): string {
-    return crypto.createHash("sha256").update(str).digest("hex");
+    const SHA256 = require("crypto-js/sha256");
+    return SHA256(str).toString();
   }
 }
