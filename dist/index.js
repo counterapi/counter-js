@@ -13,4 +13,5 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./counter"), exports);
 __exportStar(require("./counterAPI"), exports);
 __exportStar(require("./api.config"), exports);
+__exportStar(require("./hash"), exports);
 //# sourceMappingURL=index.js.map
