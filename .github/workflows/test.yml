@@ -26,24 +26,24 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - name: Get pnpm cache directory path 🛠
-        id: pnpm-cache-dir-path
-        run: echo "::set-output name=dir::$(pnpm cache dir)"
+      - name: Get yarn cache directory path 🛠
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
 
       - name: Cache node_modules 📦
         uses: actions/cache@v3
-        id: pnpm-cache # use this to check for `cache-hit` (`steps.pnpm-cache.outputs.cache-hit != 'true'`)
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
-          path: ${{ steps.pnpm-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm.lock') }}
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-pnpm-
+            ${{ runner.os }}-yarn-
 
       - name: Install dependencies 👨🏻‍💻
-        run: pnpm
+        run: yarn
 
       - name: Run linter 👀
-        run: pnpm lint
+        run: yarn lint
 
       - name: Run Test 🚦
-        run: pnpm test
+        run: yarn test
