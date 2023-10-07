@@ -4,7 +4,6 @@ import { Count, Counter } from "./counter";
 import { Hash } from "./hash";
 
 export enum GroupByTypes {
-  Hour = "hour",
   Day = "day",
   Week = "week",
   Month = "month",
@@ -17,7 +16,6 @@ export enum OrderByTypes {
 }
 
 export interface CountsQuery {
-  name: string;
   group_by: GroupByTypes;
   order?: OrderByTypes;
   hash?: boolean;
@@ -30,17 +28,13 @@ export class CounterAPI {
     this.axios = axios.create(apiConfig);
   }
 
-  async up(name: string, hash: boolean = false): Promise<Counter> {
+  async up(namespace: string, name: string, hash: boolean = false): Promise<Counter> {
     if (hash) {
       name = Hash.create(name);
     }
 
     return await this.axios
-      .get("up", {
-        params: {
-          name,
-        },
-      })
+      .get(`${namespace}/${name}/up`)
       .then((res) => {
         return new Counter({
           ID: res.data.id,
@@ -55,17 +49,13 @@ export class CounterAPI {
       });
   }
 
-  async down(name: string, hash: boolean = false): Promise<Counter> {
+  async down(namespace: string, name: string, hash: boolean = false): Promise<Counter> {
     if (hash) {
       name = Hash.create(name);
     }
 
     return await this.axios
-      .get("down", {
-        params: {
-          name,
-        },
-      })
+      .get(`${namespace}/${name}/down`)
       .then((res) => {
         return new Counter({
           ID: res.data.id,
@@ -80,17 +70,13 @@ export class CounterAPI {
       });
   }
 
-  async get(name: string, hash: boolean = false): Promise<Counter> {
+  async get(namespace: string, name: string, hash: boolean = false): Promise<Counter> {
     if (hash) {
       name = Hash.create(name);
     }
 
     return await this.axios
-      .get("get", {
-        params: {
-          name,
-        },
-      })
+      .get(`${namespace}/${name}/`)
       .then((res) => {
         return new Counter({
           ID: res.data.id,
@@ -106,6 +92,7 @@ export class CounterAPI {
   }
 
   async set(
+    namespace: string,
     name: string,
     count: number,
     hash: boolean = false
@@ -115,9 +102,8 @@ export class CounterAPI {
     }
 
     return await this.axios
-      .get("set", {
+      .get(`${namespace}/${name}/set`, {
         params: {
-          name,
           count,
         },
       })
@@ -135,13 +121,17 @@ export class CounterAPI {
       });
   }
 
-  async counts(query: CountsQuery): Promise<Count[]> {
+  async counts(
+      namespace: string,
+      name: string,
+      query: CountsQuery
+  ): Promise<Count[]> {
     if (query.hash) {
-      query.name = Hash.create(query.name);
+      name = Hash.create(name);
     }
 
     return await this.axios
-      .get("counts", {
+      .get(`${namespace}/${name}/list`, {
         params: query,
       })
       .then((res) => {

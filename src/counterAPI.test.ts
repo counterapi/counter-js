@@ -1,7 +1,6 @@
 import { CounterAPI, GroupByTypes } from "./counterAPI";
 
 import axios, { AxiosResponse } from "axios";
-import {AxiosRequestHeaders} from "axios/index";
 
 jest.mock("axios");
 
@@ -54,7 +53,7 @@ it("returns get API successfully", async () => {
   expect(axios.get).not.toHaveBeenCalled();
 
   const api = new CounterAPI();
-  const actual = await api.get("test");
+  const actual = await api.get("test", "test");
 
   expect(axios.get).toHaveBeenCalled();
   expect(actual.ID).toEqual(1);
@@ -66,7 +65,7 @@ it("returns get API successfully with hash", async () => {
   mockedAxios.get.mockResolvedValue(mockedResponse);
 
   const api = new CounterAPI();
-  const actual = await api.get("test", true);
+  const actual = await api.get("test","test", true);
 
   expect(axios.get).toHaveBeenCalled();
   expect(actual.ID).toEqual(1);
@@ -78,7 +77,7 @@ it("returns up API successfully", async () => {
   mockedAxios.get.mockResolvedValue(mockedResponse);
 
   const api = new CounterAPI();
-  const actual = await api.up("test");
+  const actual = await api.up("test", "test");
 
   expect(axios.get).toHaveBeenCalled();
   expect(actual.ID).toEqual(1);
@@ -90,7 +89,7 @@ it("returns down API successfully", async () => {
   mockedAxios.get.mockResolvedValue(mockedResponse);
 
   const api = new CounterAPI();
-  const actual = await api.down("test");
+  const actual = await api.down("test", "test");
 
   expect(axios.get).toHaveBeenCalled();
   expect(actual.ID).toEqual(1);
@@ -102,7 +101,7 @@ it("returns set API successfully", async () => {
   mockedAxios.get.mockResolvedValue(mockedResponse);
 
   const api = new CounterAPI();
-  const actual = await api.set("test", 14);
+  const actual = await api.set("test","test", 14);
 
   expect(axios.get).toHaveBeenCalled();
   expect(actual.ID).toEqual(1);
@@ -114,8 +113,10 @@ it("returns count list API successfully", async () => {
   mockedAxios.get.mockResolvedValue(mockedCountListResponse);
 
   const api = new CounterAPI();
-  const actual = await api.counts({
-    name: "test",
+  const actual = await api.counts(
+      "test",
+      "test",
+      {
     group_by: GroupByTypes.Day,
   });
 

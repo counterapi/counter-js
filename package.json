@@ -26,6 +26,6 @@
     "type": "git",
     "url": "git+https://github.com/counterapi/counter-js.git"
   },
-  "author": "omegion <oomegion@gmail.com>",
+  "author": "omegion <hello@counterapi.dev>",
   "license": "MIT"
 }
