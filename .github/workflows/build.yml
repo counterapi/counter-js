@@ -38,7 +38,7 @@ jobs:
         run: echo "::set-output name=dir::$(pnpm cache dir)"
 
       - name: Cache node_modules 📦
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: pnpm-cache # use this to check for `cache-hit` (`steps.pnpm-cache.outputs.cache-hit != 'true'`)
         with:
           path: ${{ steps.pnpm-cache-dir-path.outputs.dir }}
