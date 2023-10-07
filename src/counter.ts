@@ -9,7 +9,6 @@ export class Counter {
     Object.assign(this, init);
   }
 }
-
 export class Count {
   public Count: number;
   public Date: Date;

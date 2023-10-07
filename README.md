@@ -26,7 +26,7 @@ import {CounterAPI} from "counterapi";
 
 const counter = new CounterAPI();
 
-counter.up("test").then((res) => {
+counter.up("test", "test").then((res) => {
     console.log(res)
 })
 ```
@@ -38,8 +38,8 @@ Counter {
   ID: 1,
   Name: 'test',
   Count: 15,
-  UpdatedAt: '2021-03-27T13:33:51.315934+01:00',
-  CreatedAt: '2021-03-26T21:46:18.624369+08:00'
+  UpdatedAt: '2023-03-27T13:33:51.315934+01:00',
+  CreatedAt: '2023-03-26T21:46:18.624369+08:00'
 }
 ```
 
@@ -50,7 +50,7 @@ import {CounterAPI} from "counterapi";
 
 const counter = new CounterAPI();
 
-counter.down("test").then((res) => {
+counter.down("test", "test").then((res) => {
     console.log(res)
 })
 ```
@@ -62,8 +62,8 @@ Counter {
   ID: 1,
   Name: 'test',
   Count: 14,
-  UpdatedAt: '2021-03-27T13:33:51.315934+01:00',
-  CreatedAt: '2021-03-26T21:46:18.624369+08:00'
+  UpdatedAt: '2023-03-27T13:33:51.315934+01:00',
+  CreatedAt: '2023-03-26T21:46:18.624369+08:00'
 }
 ```
 
@@ -74,7 +74,7 @@ import {CounterAPI} from "counterapi";
 
 const counter = new CounterAPI();
 
-counter.get("test").then((res) => {
+counter.get("test", "test").then((res) => {
     console.log(res)
 })
 ```
@@ -86,8 +86,8 @@ Counter {
   ID: 1,
   Name: 'test',
   Count: 14,
-  UpdatedAt: '2021-03-27T13:33:51.315934+01:00',
-  CreatedAt: '2021-03-26T21:46:18.624369+08:00'
+  UpdatedAt: '2023-03-27T13:33:51.315934+01:00',
+  CreatedAt: '2023-03-26T21:46:18.624369+08:00'
 }
 ```
 
@@ -98,7 +98,7 @@ import {CounterAPI} from "counterapi";
 
 const counter = new CounterAPI();
 
-counter.set("test", 10).then((res) => {
+counter.set("test", "test", 10).then((res) => {
     console.log(res)
 })
 ```
@@ -110,8 +110,8 @@ Counter {
   ID: 1,
   Name: 'test',
   Count: 10,
-  UpdatedAt: '2021-03-27T13:33:51.315934+01:00',
-  CreatedAt: '2021-03-26T21:46:18.624369+08:00'
+  UpdatedAt: '2023-03-27T13:33:51.315934+01:00',
+  CreatedAt: '2023-03-26T21:46:18.624369+08:00'
 }
 ```
 
@@ -123,12 +123,11 @@ import {CounterAPI, GroupByTypes, OrderByTypes} from "counterapi";
 const counter = new CounterAPI();
 
 const q = {
-    name: "test",
     group_by: GroupByTypes.Day,
     order_by: OrderByTypes.ASC,
 };
 
-counter.counts(q).then((res) => {
+counter.counts("test", "test", q).then((res) => {
     console.log(res);
 });
 ```
@@ -137,9 +136,9 @@ Output
 
 ```shell
 [
-  Count { Count: 2, Date: '2021-03-07T00:00:00+08:00' },
-  Count { Count: 14, Date: '2021-03-26T00:00:00+08:00' },
-  Count { Count: 40, Date: '2021-03-27T00:00:00+08:00' }
+  Count { Count: 2, Date: '2023-03-07T00:00:00+08:00' },
+  Count { Count: 14, Date: '2023-03-26T00:00:00+08:00' },
+  Count { Count: 40, Date: '2023-03-27T00:00:00+08:00' }
 ]
 ```
 
