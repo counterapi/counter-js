@@ -12,25 +12,30 @@ on:
 
 jobs:
   publish:
-    runs-on: ${{ matrix.os }}
+    name: Build and Release
+    runs-on: 'ubuntu-latest'
+    permissions:
+      contents: write
 
-    strategy:
-      matrix:
-        os: [ ubuntu-latest ]
-        node: [ 20 ]
+    outputs:
+      new_tag: ${{ steps.tag_version.outputs.new_tag }}
+
 
     steps:
       - name: Checkout 🛎
         uses: actions/checkout@master
 
-      - name: Get the version
-        id: get_version
-        run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.1
+        with:
+          default_bump: minor
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup node env 🏗
         uses: actions/setup-node@v2.1.2
         with:
-          node-version: ${{ matrix.node }}
+          node-version: 20
           registry-url: https://registry.npmjs.org/
 
       - name: Get pnpm cache directory path 🛠
@@ -65,7 +70,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          name: Release ${{ steps.get_version.outputs.VERSION }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
           body: |
             ${{steps.github_release.outputs.changelog}}
         env:
@@ -73,8 +78,18 @@ jobs:
 
       - uses: fregante/setup-git-user@v1
 
-      - run: npm version ${{ steps.get_version.outputs.VERSION }} --no-git-tag-version --allow-same-version
+      - run: npm version ${{ steps.tag_version.outputs.new_tag }} --no-git-tag-version --allow-same-version
 
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+
+      - name: Release with Notes
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}
+          draft: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
