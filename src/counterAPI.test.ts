@@ -1,6 +1,7 @@
 import { CounterAPI, GroupByTypes } from "./counterAPI";
 
 import axios, { AxiosResponse } from "axios";
+import {AxiosRequestHeaders} from "axios/index";
 
 jest.mock("axios");
 
@@ -19,7 +20,9 @@ const mockedResponse: AxiosResponse = {
   status: 200,
   statusText: "OK",
   headers: {},
-  config: {},
+  config: {
+    headers: null
+  },
 };
 
 const mockedCountListResponse: AxiosResponse = {
@@ -40,7 +43,9 @@ const mockedCountListResponse: AxiosResponse = {
   status: 200,
   statusText: "OK",
   headers: {},
-  config: {},
+  config: {
+    headers: null
+  },
 };
 
 it("returns get API successfully", async () => {
