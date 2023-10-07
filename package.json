@@ -10,7 +10,7 @@
     "test": "jest --config jestconfig.json"
   },
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.27.0",
     "js-sha256": "^0.9.0"
   },
   "devDependencies": {
