@@ -43,7 +43,6 @@ var counter_1 = require("./counter");
 var hash_1 = require("./hash");
 var GroupByTypes;
 (function (GroupByTypes) {
-    GroupByTypes["Hour"] = "hour";
     GroupByTypes["Day"] = "day";
     GroupByTypes["Week"] = "week";
     GroupByTypes["Month"] = "month";
@@ -58,7 +57,7 @@ var CounterAPI = (function () {
     function CounterAPI() {
         this.axios = axios_1.default.create(api_config_1.apiConfig);
     }
-    CounterAPI.prototype.up = function (name, hash) {
+    CounterAPI.prototype.up = function (namespace, name, hash) {
         if (hash === void 0) { hash = false; }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -68,11 +67,7 @@ var CounterAPI = (function () {
                             name = hash_1.Hash.create(name);
                         }
                         return [4, this.axios
-                                .get("up", {
-                                params: {
-                                    name: name,
-                                },
-                            })
+                                .get("".concat(namespace, "/").concat(name, "/up"))
                                 .then(function (res) {
                                 return new counter_1.Counter({
                                     ID: res.data.id,
@@ -90,7 +85,7 @@ var CounterAPI = (function () {
             });
         });
     };
-    CounterAPI.prototype.down = function (name, hash) {
+    CounterAPI.prototype.down = function (namespace, name, hash) {
         if (hash === void 0) { hash = false; }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -100,11 +95,7 @@ var CounterAPI = (function () {
                             name = hash_1.Hash.create(name);
                         }
                         return [4, this.axios
-                                .get("down", {
-                                params: {
-                                    name: name,
-                                },
-                            })
+                                .get("".concat(namespace, "/").concat(name, "/down"))
                                 .then(function (res) {
                                 return new counter_1.Counter({
                                     ID: res.data.id,
@@ -122,7 +113,7 @@ var CounterAPI = (function () {
             });
         });
     };
-    CounterAPI.prototype.get = function (name, hash) {
+    CounterAPI.prototype.get = function (namespace, name, hash) {
         if (hash === void 0) { hash = false; }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -132,11 +123,7 @@ var CounterAPI = (function () {
                             name = hash_1.Hash.create(name);
                         }
                         return [4, this.axios
-                                .get("get", {
-                                params: {
-                                    name: name,
-                                },
-                            })
+                                .get("".concat(namespace, "/").concat(name, "/"))
                                 .then(function (res) {
                                 return new counter_1.Counter({
                                     ID: res.data.id,
@@ -154,7 +141,7 @@ var CounterAPI = (function () {
             });
         });
     };
-    CounterAPI.prototype.set = function (name, count, hash) {
+    CounterAPI.prototype.set = function (namespace, name, count, hash) {
         if (hash === void 0) { hash = false; }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -164,9 +151,8 @@ var CounterAPI = (function () {
                             name = hash_1.Hash.create(name);
                         }
                         return [4, this.axios
-                                .get("set", {
+                                .get("".concat(namespace, "/").concat(name, "/set"), {
                                 params: {
-                                    name: name,
                                     count: count,
                                 },
                             })
@@ -187,16 +173,16 @@ var CounterAPI = (function () {
             });
         });
     };
-    CounterAPI.prototype.counts = function (query) {
+    CounterAPI.prototype.counts = function (namespace, name, query) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         if (query.hash) {
-                            query.name = hash_1.Hash.create(query.name);
+                            name = hash_1.Hash.create(name);
                         }
                         return [4, this.axios
-                                .get("counts", {
+                                .get("".concat(namespace, "/").concat(name, "/list"), {
                                 params: query,
                             })
                                 .then(function (res) {

@@ -1,7 +1,6 @@
 import { AxiosInstance } from "axios";
 import { Count, Counter } from "./counter";
 export declare enum GroupByTypes {
-    Hour = "hour",
     Day = "day",
     Week = "week",
     Month = "month",
@@ -12,7 +11,6 @@ export declare enum OrderByTypes {
     DESC = "desc"
 }
 export interface CountsQuery {
-    name: string;
     group_by: GroupByTypes;
     order?: OrderByTypes;
     hash?: boolean;
@@ -20,9 +18,9 @@ export interface CountsQuery {
 export declare class CounterAPI {
     axios: AxiosInstance;
     constructor();
-    up(name: string, hash?: boolean): Promise<Counter>;
-    down(name: string, hash?: boolean): Promise<Counter>;
-    get(name: string, hash?: boolean): Promise<Counter>;
-    set(name: string, count: number, hash?: boolean): Promise<Counter>;
-    counts(query: CountsQuery): Promise<Count[]>;
+    up(namespace: string, name: string, hash?: boolean): Promise<Counter>;
+    down(namespace: string, name: string, hash?: boolean): Promise<Counter>;
+    get(namespace: string, name: string, hash?: boolean): Promise<Counter>;
+    set(namespace: string, name: string, count: number, hash?: boolean): Promise<Counter>;
+    counts(namespace: string, name: string, query: CountsQuery): Promise<Count[]>;
 }
