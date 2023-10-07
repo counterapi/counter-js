@@ -6,7 +6,7 @@
   "typings": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "lint": "tslint -p tsconfig.json",
+    "lint": "eslint",
     "test": "jest --config jestconfig.json"
   },
   "dependencies": {
