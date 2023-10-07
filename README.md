@@ -1,12 +1,12 @@
 <p align="center">
   <a href="https://counterapi.dev/" target="_blank">
-    <img width="180" src="https://raw.githubusercontent.com/counterapi/docs/master/src/.vuepress/public/favicons/apple-icon-180x180.png" alt="logo">
+    <img width="180" src="https://counterapi.dev/img/counterapi-logo.svg" alt="logo">
   </a>
 </p>
 
 <p align="center">
     <img src="https://img.shields.io/npm/dm/counterapi.svg" alt="Downloads"></a>
-    <img src="https://img.shields.io/github/workflow/status/counterapi/counter-js/ci" alt="Check"></a>
+    <img src="https://img.shields.io/github/workflow/status/counterapi/counter-js/Tests" alt="Check"></a>
     <a href="https://www.npmjs.com/package/counterapi"><img src="https://img.shields.io/npm/v/counterapi.svg" alt="Version"></a>
     <a href="https://github.com/counterapi/counter-js/blob/master/LICENSE"><img src="https://img.shields.io/github/license/counterapi/counter-js" alt="License"></a>
 </p>
