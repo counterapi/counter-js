@@ -76,7 +76,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: fregante/setup-git-user@v1
+      - uses: fregante/setup-git-user@v2
 
       - run: npm version ${{ steps.tag_version.outputs.new_tag }} --no-git-tag-version --allow-same-version
 
