@@ -7,7 +7,7 @@ settings:
 dependencies:
   counterapi:
     specifier: ^1.0.0
-    version: 1.10.0
+    version: 1.12.0
 
 packages:
 
@@ -15,8 +15,8 @@ packages:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
     dev: false
 
-  /axios@1.6.1:
-    resolution: {integrity: sha512-vfBmhDpKafglh0EldBEbVuoe7DyAavGSLWhuSm5ZSEKQnHhBf0xAAwybbNH1IkrJNGnS/VG4I5yxig1pCEXE4g==}
+  /axios@1.6.2:
+    resolution: {integrity: sha512-7i24Ri4pmDRfJTR7LDBhsOTtcm+9kjX5WiY1X3wIisx6G9So3pfMkEiU7emUBe46oceVImccTEM3k6C5dbVW8A==}
     dependencies:
       follow-redirects: 1.15.3
       form-data: 4.0.0
@@ -40,10 +40,10 @@ packages:
       delayed-stream: 1.0.0
     dev: false
 
-  /counterapi@1.10.0:
-    resolution: {integrity: sha512-vRMPUAYbWNQzCP1VAo4iIVtRt7zozKybWg/05W/hakBn2xBTHQDqedE23Q05J4ZcuvPrjKhh2lTMj7oMxfnpAw==}
+  /counterapi@1.12.0:
+    resolution: {integrity: sha512-tKzUhGSURqAlE8ngJMrSoPLlRUEbOaGk9/p4KXfnBY5+zMRdyEgtz1r7cBqTBUUIFD9kZZbhX8oCtT2tqXRvag==}
     dependencies:
-      axios: 1.6.1
+      axios: 1.6.2
       js-sha256: 0.10.1
       qs: 6.11.2
     transitivePeerDependencies:
