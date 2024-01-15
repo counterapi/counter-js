@@ -7,7 +7,7 @@ settings:
 dependencies:
   counterapi:
     specifier: ^1.0.0
-    version: 1.20.0
+    version: 1.21.0
 
 packages:
 
@@ -18,7 +18,7 @@ packages:
   /axios@1.6.5:
     resolution: {integrity: sha512-Ii012v05KEVuUoFWmMW/UQv9aRIc3ZwkWDcM+h5Il8izZCtRVpDUfwpoFf7eOtajT3QiGR4yDUx7lPqHJULgbg==}
     dependencies:
-      follow-redirects: 1.15.4
+      follow-redirects: 1.15.5
       form-data: 4.0.0
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
@@ -30,7 +30,7 @@ packages:
     dependencies:
       function-bind: 1.1.2
       get-intrinsic: 1.2.2
-      set-function-length: 1.1.1
+      set-function-length: 1.2.0
     dev: false
 
   /combined-stream@1.0.8:
@@ -40,8 +40,8 @@ packages:
       delayed-stream: 1.0.0
     dev: false
 
-  /counterapi@1.20.0:
-    resolution: {integrity: sha512-RvQMB9YbFiQ697F2BQFhxH+nAZ1PkKdG1NNV0FRXDm8rZ/9+gjjuL5ao1wy021Q1RSLHb1AfRqBgWBnQyAfbig==}
+  /counterapi@1.21.0:
+    resolution: {integrity: sha512-mrHQiareBgj3mivkcDkQsu7duUx0R7OFatMjoNtNNlChggWuXMOKgHXmZ3kzW2Jg8SsSs7xteQSc1Bxym0QEMg==}
     dependencies:
       axios: 1.6.5
       js-sha256: 0.10.1
@@ -64,8 +64,8 @@ packages:
     engines: {node: '>=0.4.0'}
     dev: false
 
-  /follow-redirects@1.15.4:
-    resolution: {integrity: sha512-Cr4D/5wlrb0z9dgERpUL3LrmPKVDsETIJhaCMeDfuFYcqa5bldGV6wBsAN6X/vxlXQtFBMrXdXxdL8CbDTGniw==}
+  /follow-redirects@1.15.5:
+    resolution: {integrity: sha512-vSFWUON1B+yAw1VN4xMfxgn5fTUiaOzAJCKBwIIgT/+7CuGy9+r+5gITvP62j3RmaD5Ph65UaERdOSRGUzZtgw==}
     engines: {node: '>=4.0'}
     peerDependencies:
       debug: '*'
@@ -156,11 +156,12 @@ packages:
       side-channel: 1.0.4
     dev: false
 
-  /set-function-length@1.1.1:
-    resolution: {integrity: sha512-VoaqjbBJKiWtg4yRcKBQ7g7wnGnLV3M8oLvVWwOk2PdYY6PEFegR1vezXR0tw6fZGF9csVakIRjrJiy2veSBFQ==}
+  /set-function-length@1.2.0:
+    resolution: {integrity: sha512-4DBHDoyHlM1IRPGYcoxexgh67y4ueR53FKV1yyxwFMY7aCqcN/38M1+SwZ/qJQ8iLv7+ck385ot4CcisOAPT9w==}
     engines: {node: '>= 0.4'}
     dependencies:
       define-data-property: 1.1.1
+      function-bind: 1.1.2
       get-intrinsic: 1.2.2
       gopd: 1.0.1
       has-property-descriptors: 1.0.1
