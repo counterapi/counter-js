@@ -7,7 +7,7 @@ settings:
 dependencies:
   counterapi:
     specifier: ^1.0.0
-    version: 1.30.101
+    version: 1.30.102
 
 packages:
 
@@ -33,7 +33,7 @@ packages:
       es-errors: 1.3.0
       function-bind: 1.1.2
       get-intrinsic: 1.2.4
-      set-function-length: 1.2.1
+      set-function-length: 1.2.2
     dev: false
 
   /combined-stream@1.0.8:
@@ -43,8 +43,8 @@ packages:
       delayed-stream: 1.0.0
     dev: false
 
-  /counterapi@1.30.101:
-    resolution: {integrity: sha512-3kLrbvuXUiuheKFJJjqG1umtxhvYfjH0YiEveenLBADX3zrcuUK4Em8VUM+B7btGxXgyvnXcbeZ7V22OZcyeoQ==}
+  /counterapi@1.30.102:
+    resolution: {integrity: sha512-m0PXz+/viqJPwrpeQE3+XNJebzifIkwDqCHsISJqHb7OzJ2mnpPiWaE3xt4YwETHq/bag1VbST+Hn9Uj2dCkBQ==}
     dependencies:
       axios: 1.6.7
       js-sha256: 0.11.0
@@ -173,8 +173,8 @@ packages:
       side-channel: 1.0.6
     dev: false
 
-  /set-function-length@1.2.1:
-    resolution: {integrity: sha512-j4t6ccc+VsKwYHso+kElc5neZpjtq9EnRICFZtWyBsLojhmeF/ZBd/elqm22WJh/BziDe/SBiOeAt0m2mfLD0g==}
+  /set-function-length@1.2.2:
+    resolution: {integrity: sha512-pgRc4hJ4/sNjWCSS9AmnS40x3bNMDTknHgL5UaMBTMyJnU90EgWh1Rz+MC9eFu4BuN/UwZjKQuY/1v3rM7HMfg==}
     engines: {node: '>= 0.4'}
     dependencies:
       define-data-property: 1.1.4
