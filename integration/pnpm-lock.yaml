@@ -7,7 +7,7 @@ settings:
 dependencies:
   counterapi:
     specifier: ^1.0.0
-    version: 1.31.0
+    version: 1.32.0
 
 packages:
 
@@ -43,8 +43,8 @@ packages:
       delayed-stream: 1.0.0
     dev: false
 
-  /counterapi@1.31.0:
-    resolution: {integrity: sha512-t7lihyuiDDpCXKqWH2z+eQXChtCSQln8rb7iIlBYLwTsSwzmX8Csd383qc5LJEgPpGZvBSx0icyJnjwxEhDDOg==}
+  /counterapi@1.32.0:
+    resolution: {integrity: sha512-CWxamkohZnw1VZQ6OvkXl0MoD+1ArfF6V3KhdXlQ6dDympw8Ddu4fyBKTRqpunl9dJRoexxbUjDoDiHkJ7SSoQ==}
     dependencies:
       axios: 1.6.7
       js-sha256: 0.11.0
@@ -110,7 +110,7 @@ packages:
       function-bind: 1.1.2
       has-proto: 1.0.3
       has-symbols: 1.0.3
-      hasown: 2.0.1
+      hasown: 2.0.2
     dev: false
 
   /gopd@1.0.1:
@@ -135,8 +135,8 @@ packages:
     engines: {node: '>= 0.4'}
     dev: false
 
-  /hasown@2.0.1:
-    resolution: {integrity: sha512-1/th4MHjnwncwXsIW6QMzlvYL9kG5e/CpVvLRZe4XPa8TOUNbCELqmvhDmnkNsAjwaG4+I8gJJL0JBvTTLO9qA==}
+  /hasown@2.0.2:
+    resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
     engines: {node: '>= 0.4'}
     dependencies:
       function-bind: 1.1.2
