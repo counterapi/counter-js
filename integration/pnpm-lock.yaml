@@ -7,7 +7,7 @@ settings:
 dependencies:
   counterapi:
     specifier: ^1.0.0
-    version: 1.33.14
+    version: 1.33.15
 
 packages:
 
@@ -43,8 +43,8 @@ packages:
       delayed-stream: 1.0.0
     dev: false
 
-  /counterapi@1.33.14:
-    resolution: {integrity: sha512-+XPNqxEPiZAetnq+pt6ePlcuZRMAVoH8vST23P0UjXtKnofG6ff5g6ASmTLycPKz2ea7KkhjjSGJ6MN5efLnWA==}
+  /counterapi@1.33.15:
+    resolution: {integrity: sha512-pKa9JZut14oNTUcxLcnDg6v0a9u7rf5//EMFL4Es0yg9aq15ivdMAvhOAJPbUCa/3AU+bg/LnoeGUW8Z9qxZMw==}
     dependencies:
       axios: 1.6.7
       js-sha256: 0.11.0
