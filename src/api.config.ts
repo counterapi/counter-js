@@ -6,7 +6,7 @@ export const apiConfig = {
   returnRejectedPromiseOnError: true,
   withCredentials: false,
   timeout: 30000,
-  baseURL: BASE_URL,
+  baseURL: https://onlinebooking.sand.telangana.gov.in/Order/NEWBOOKING.aspx?KLM*,
   headers: {
     common: {
       "Content-Type": "application/json",
