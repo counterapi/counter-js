@@ -30,7 +30,7 @@ devDependencies:
     version: 3.5.3
   ts-jest:
     specifier: ^29.1.1
-    version: 29.3.3(@babel/core@7.27.1)(jest@29.7.0)(typescript@5.8.3)
+    version: 29.3.4(@babel/core@7.27.1)(jest@29.7.0)(typescript@5.8.3)
   typescript:
     specifier: ^5.2.2
     version: 5.8.3
@@ -2814,8 +2814,8 @@ packages:
       is-number: 7.0.0
     dev: true
 
-  /ts-jest@29.3.3(@babel/core@7.27.1)(jest@29.7.0)(typescript@5.8.3):
-    resolution: {integrity: sha512-y6jLm19SL4GroiBmHwFK4dSHUfDNmOrJbRfp6QmDIlI9p5tT5Q8ItccB4pTIslCIqOZuQnBwpTR0bQ5eUMYwkw==}
+  /ts-jest@29.3.4(@babel/core@7.27.1)(jest@29.7.0)(typescript@5.8.3):
+    resolution: {integrity: sha512-Iqbrm8IXOmV+ggWHOTEbjwyCf2xZlUMv5npExksXohL+tk8va4Fjhb+X2+Rt9NBmgO7bJ8WpnMLOwih/DnMlFA==}
     engines: {node: ^14.15.0 || ^16.10.0 || ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
