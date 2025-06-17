@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CounterAPI Browser Demo</title>
-    <script src="https://unpkg.com/counterapi@v2.0.6/dist/counterapi.browser.min.js"></script>
+    <script src="../../dist/counterapi.browser.min.js"></script>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -59,115 +59,88 @@
 </head>
 <body>
     <h1>CounterAPI Browser Demo</h1>
-    
-    <div class="counter">
-        <h2>Counter: <span id="counterName">test</span></h2>
-        <div class="counter-value">Value: <span id="counterValue">Loading...</span></div>
-        <div class="counter-buttons">
-            <button onclick="increment()" id="upButton">Up</button>
-            <button onclick="decrement()" id="downButton">Down</button>
-            <button onclick="reset()" id="resetButton">Reset</button>
+
+    <div class="container">
+        <div class="header">
+            <img src="https://usertune.io/img/logo.png" alt="Usertune" class="logo">
+            <h1>Usertune.js CDN Test</h1>
+            <p class="info">Testing library loaded from: <br>
+            <p class="info">Simple usage: <code>new Usertune({workspace: 1})</code></p>
         </div>
-        <div id="message"></div>
+
+        <div class="test-section">
+            <h3>📦 Library Loading Test</h3>
+            <div id="loading-status" class="loading">⏳ Loading library...</div>
+        </div>
+
+        <div class="test-section">
+            <h3>🔧 Client Initialization Test</h3>
+            <div id="init-status">Not started</div>
+        </div>
+
+        <div class="test-section">
+            <h3>📡 Content Retrieval Test</h3>
+            <button id="test-content" disabled>Test Content API</button>
+            <div id="content-status">Waiting for initialization...</div>
+            <pre id="content-result"></pre>
+        </div>
+
+        <div class="test-section">
+            <h3>🎯 Tracking Test</h3>
+            <button id="test-tracking" disabled>Test Tracking API</button>
+            <div id="tracking-status">Need content first...</div>
+            <pre id="tracking-result"></pre>
+        </div>
+
+        <div class="test-section">
+            <h3>❌ Error Handling Test</h3>
+            <button id="test-errors" disabled>Test Error Cases</button>
+            <div id="error-status">Waiting for initialization...</div>
+            <pre id="error-result"></pre>
+        </div>
     </div>
-
     <script>
-        // Initialize CounterAPI
+        // Global variables
+        let client = null;
+        let testContent = null;
 
-        const counter = new Counter();
-        const workspace = 'test';
-        const name = 'test';
-        let isLoading = false;
-
-        // Update UI state
-        function setLoading(loading) {
-            isLoading = loading;
-            document.getElementById('upButton').disabled = loading;
-            document.getElementById('downButton').disabled = loading;
-            document.getElementById('resetButton').disabled = loading;
+        // Utility functions
+        function setStatus(elementId, message, className = 'info') {
+            const element = document.getElementById(elementId);
+            element.innerHTML = message;
+            element.className = className;
         }
 
-        // Show message
-        function showMessage(text, isError = false) {
-            const messageEl = document.getElementById('message');
-            messageEl.textContent = text;
-            messageEl.className = isError ? 'error' : 'success';
-            setTimeout(() => {
-                messageEl.textContent = '';
-                messageEl.className = '';
-            }, 3000);
+        function setResult(elementId, data) {
+            const element = document.getElementById(elementId);
+            element.textContent = JSON.stringify(data, null, 2);
         }
 
-        // Update counter value
-        function updateCounterValue(value) {
-            document.getElementById('counterValue').textContent = value;
+        function enableButton(buttonId) {
+            document.getElementById(buttonId).disabled = false;
         }
 
-        // Fetch current counter value
-        async function fetchCounter() {
+        // Test 1: Check if library loaded
+        function testLibraryLoading() {
             try {
-                setLoading(true);
-                const result = await counter.get(workspace, name);
-                if (result.data) {
-                    updateCounterValue(result.data.up_count - result.data.down_count);
+                console.log('CounterAPI object:', window.CounterAPI);
+                console.log('CounterAPI type:', typeof window.CounterAPI);
+
+                if (typeof window.CounterAPI === 'function') {
+                    setStatus('loading-status', '✅ Library loaded successfully!', 'success');
+                } else {
+                    setStatus('loading-status', `❌ Library not found! Type: ${typeof window.CounterAPI}`, 'error');
+                    console.log('Available keys:', Object.keys(window.CounterAPI || {}));
                 }
-            } catch (err) {
-                showMessage(err.message || 'Failed to fetch counter', true);
-            } finally {
-                setLoading(false);
+            } catch (error) {
+                setStatus('loading-status', `❌ Error: ${error.message}`, 'error');
             }
         }
 
-        // Increment counter
-        async function increment() {
-            try {
-                setLoading(true);
-                const result = await counter.up(workspace, name);
-                if (result.data) {
-                    updateCounterValue(result.data.up_count - result.data.down_count);
-                    showMessage('Counter incremented!');
-                }
-            } catch (err) {
-                showMessage(err.message || 'Failed to increment counter', true);
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        // Decrement counter
-        async function decrement() {
-            try {
-                setLoading(true);
-                const result = await counter.down(workspace, name);
-                if (result.data) {
-                    updateCounterValue(result.data.up_count - result.data.down_count);
-                    showMessage('Counter decremented!');
-                }
-            } catch (err) {
-                showMessage(err.message || 'Failed to decrement counter', true);
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        // Reset counter
-        async function reset() {
-            try {
-                setLoading(true);
-                const result = await counter.reset(workspace, name);
-                if (result.data) {
-                    updateCounterValue(0);
-                    showMessage('Counter reset!');
-                }
-            } catch (err) {
-                showMessage(err.message || 'Failed to reset counter', true);
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        // Initial fetch
-        fetchCounter();
+        // Start tests when page loads
+        window.addEventListener('load', () => {
+            setTimeout(testLibraryLoading, 100); // Small delay to ensure script loaded
+        });
     </script>
 </body>
 </html> 

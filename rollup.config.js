@@ -63,7 +63,7 @@ export default [
       format: 'umd',
       name: 'CounterAPI',
       sourcemap: true,
-      exports: 'named',
+      exports: 'default',
       globals: {
         'counterapi.js': 'CounterAPI'
       }
@@ -79,7 +79,7 @@ export default [
       format: 'umd',
       name: 'CounterAPI',
       sourcemap: true,
-      exports: 'named',
+      exports: 'default',
       globals: {
         'counterapi.js': 'CounterAPI'
       }
