@@ -1,3 +1,7 @@
+# CounterAPI JavaScript/TypeScript Library
+
+> Main library code is located in `src/counterapi.ts`.
+
 <p align="center">
   <a href="https://counterapi.dev/" target="_blank">
     <img width="180" src="https://counterapi.dev/img/logo.png" alt="logo">
@@ -141,6 +145,87 @@ Output
   Count { Count: 40, Date: '2023-03-27T00:00:00+08:00' }
 ]
 ```
+
+## Usage
+
+### Install
+
+```
+npm install counterapi axios
+```
+
+> **Note:** This library uses [axios](https://github.com/axios/axios) for HTTP requests. Make sure you have it installed as shown above.
+
+### Import and Use (v2 by default)
+
+```ts
+import Counter from 'counterapi';
+// or
+import { Counter } from 'counterapi';
+
+const counter = new Counter();
+
+// Increment a counter
+const upResult = await counter.up('myworkspace', 'mycounter');
+console.log('Up:', upResult.value);
+
+// Decrement a counter
+const downResult = await counter.down('myworkspace', 'mycounter');
+console.log('Down:', downResult.value);
+
+// Get current value
+const getResult = await counter.get('myworkspace', 'mycounter');
+console.log('Get:', getResult.value);
+
+// Reset the counter
+const resetResult = await counter.reset('myworkspace', 'mycounter');
+console.log('Reset:', resetResult.value);
+
+// Get stats
+const statsResult = await counter.stats('myworkspace', 'mycounter');
+console.log('Stats:', statsResult);
+```
+
+### Use v1 API
+
+```ts
+import { CounterV1 } from 'counterapi';
+
+const counterV1 = new CounterV1();
+
+// Increment a counter
+const upResult = await counterV1.up('myspace', 'mycounter');
+console.log('Up:', upResult.value);
+
+// Decrement a counter
+const downResult = await counterV1.down('myspace', 'mycounter');
+console.log('Down:', downResult.value);
+
+// Get current value
+const getResult = await counterV1.get('myspace', 'mycounter');
+console.log('Get:', getResult.value);
+
+// Set the counter to a specific value
+const setResult = await counterV1.set('myspace', 'mycounter', 42);
+console.log('Set:', setResult.value);
+```
+
+### API Methods
+
+#### v2 (Counter)
+- `up(workspace, name)`
+- `down(workspace, name)`
+- `get(workspace, name)`
+- `reset(workspace, name)`
+- `stats(workspace, name)`
+
+#### v1 (CounterV1)
+- `up(namespace, name)`
+- `down(namespace, name)`
+- `get(namespace, name)`
+- `set(namespace, name, value)`
+
+All methods return a Promise with the counter response.
 
 ## License
 
