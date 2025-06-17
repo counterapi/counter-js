@@ -37,8 +37,23 @@
     "api",
     "typescript"
   ],
-  "author": "",
+  "author": {
+    "name": "CounterAPI",
+    "email": "support@counterapi.dev",
+    "url": "https://counterapi.dev"
+  },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/counterapi/counter.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/counterapi/counter.js/issues"
+  },
+  "homepage": "https://github.com/counterapi/counter.js#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "axios": "^1.10.0"
   },
