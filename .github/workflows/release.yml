@@ -77,10 +77,10 @@ jobs:
       
     - name: Verify build output
       run: |
-        test -f dist/counterapi.js
-        test -f dist/counterapi.esm.js
-        test -f dist/counterapi.browser.js
-        test -f dist/counterapi.browser.min.js
+        test -f dist/counter.js
+        test -f dist/counter.esm.js
+        test -f dist/counter.browser.js
+        test -f dist/counter.browser.min.js
         test -d dist/types
         
     - name: Commit version bump
