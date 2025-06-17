@@ -2,21 +2,28 @@
   "name": "counterapi",
   "version": "1.0.0",
   "description": "JavaScript/TypeScript wrapper for CounterAPI (https://counterapi.dev) supporting v1 and v2 endpoints.",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "type": "module",
+  "main": "dist/counterapi.js",
+  "module": "dist/counterapi.esm.js",
+  "browser": "dist/counterapi.browser.js",
+  "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    }
+      "import": "./dist/counterapi.esm.js",
+      "require": "./dist/counterapi.js",
+      "browser": "./dist/counterapi.browser.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./package.json": "./package.json"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "rollup -c",
+    "build:watch": "rollup -c -w",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -43,6 +50,11 @@
     "@types/jest": "^29.0.0",
     "eslint": "^8.0.0",
     "@typescript-eslint/parser": "^6.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.0.0"
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "rollup": "^4.3.0",
+    "@rollup/plugin-commonjs": "^28.0.0",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.5"
   }
 }

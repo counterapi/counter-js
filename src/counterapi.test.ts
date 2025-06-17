@@ -1,7 +1,6 @@
 import axios from 'axios';
-import { Counter } from './counterapi.v2';
-import { CounterV1 } from './counterapi.v1';
-import { CounterData, CounterStats, CounterResponseV1 } from './counterapi.shared';
+import { Counter, CounterV1 } from './counterapi.js';
+import { CounterData, CounterStats, CounterResponseV1 } from './counterapi.shared.js';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.MockedFunction<typeof axios>;

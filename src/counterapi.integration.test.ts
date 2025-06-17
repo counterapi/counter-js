@@ -1,5 +1,5 @@
-import { Counter } from './counterapi.v2';
-import { CounterV1 } from './counterapi.v1';
+import { Counter, CounterV1 } from './counterapi.js';
+import { CounterData, CounterStats, CounterResponseV1 } from './counterapi.shared.js';
 
 describe('Counter (v2) integration (real API)', () => {
   const workspace = 'test';
