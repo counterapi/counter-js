@@ -29,36 +29,38 @@ describe('Counter (v2)', () => {
   it('up', async () => {
     mockedAxios.mockImplementationOnce(() => Promise.resolve({ data: ok }));
     const res = await counter.up(workspace, name);
-    expect(res).toEqual(mockData);
+    expect(res).toEqual(ok);
   });
 
   it('down', async () => {
     mockedAxios.mockImplementationOnce(() => Promise.resolve({ data: ok }));
     const res = await counter.down(workspace, name);
-    expect(res).toEqual(mockData);
+    expect(res).toEqual(ok);
   });
 
   it('get', async () => {
     mockedAxios.mockImplementationOnce(() => Promise.resolve({ data: ok }));
     const res = await counter.get(workspace, name);
-    expect(res).toEqual(mockData);
+    expect(res).toEqual(ok);
   });
 
   it('reset', async () => {
     mockedAxios.mockImplementationOnce(() => Promise.resolve({ data: ok }));
     const res = await counter.reset(workspace, name);
-    expect(res).toEqual(mockData);
+    expect(res).toEqual(ok);
   });
 
   it('stats', async () => {
     mockedAxios.mockImplementationOnce(() => Promise.resolve({ data: okStats }));
     const res = await counter.stats(workspace, name);
-    expect(res).toEqual(mockStats);
+    expect(res).toEqual(okStats);
   });
 
-  it('throws on error code', async () => {
-    mockedAxios.mockImplementationOnce(() => Promise.resolve({ data: { code: '500', message: 'fail' } }));
-    await expect(counter.get(workspace, name)).rejects.toThrow('fail');
+  it('returns error object on error code', async () => {
+    const errorObj = { code: '500', message: 'fail' };
+    mockedAxios.mockImplementationOnce(() => Promise.resolve({ data: errorObj }));
+    const res = await counter.get(workspace, name);
+    expect(res).toEqual(errorObj);
   });
 });
 

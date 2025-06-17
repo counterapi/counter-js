@@ -6,13 +6,13 @@
     "allowJs": true,
     "declaration": true,
     "declarationMap": true,
-    "outDir": "./dist",
+    "outDir": "./dist/types",
     "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
+    "noEmit": false,
     "resolveJsonModule": true
   },
   "include": [

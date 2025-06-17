@@ -1,31 +1,31 @@
-import { CounterOptions, CounterResponseV1, V1Endpoints, API_CONFIG, CounterBase } from './counterapi.shared.js';
+import { CounterBase, CounterResponseV1, API_CONFIG, V1Endpoints } from './counterapi.shared.js';
 
 export class CounterV1 extends CounterBase<V1Endpoints> {
-  constructor(options: CounterOptions = {}) {
+  constructor(options: { timeoutMs?: number } = {}) {
     super({
-      baseUrl: options.baseUrl || API_CONFIG.v1.baseUrl,
+      baseUrl: API_CONFIG.v1.baseUrl,
       endpoints: API_CONFIG.v1.endpoints,
-      timeoutMs: options.timeoutMs,
+      timeoutMs: options.timeoutMs
     });
   }
 
-  up(namespace: string, name: string) {
+  async up(namespace: string, name: string): Promise<CounterResponseV1> {
     const url = this.buildUrl(this.endpoints.up, { namespace, name });
-    return this.request<CounterResponseV1>(url, { method: 'GET' });
+    return this.request<CounterResponseV1>(url);
   }
 
-  down(namespace: string, name: string) {
+  async down(namespace: string, name: string): Promise<CounterResponseV1> {
     const url = this.buildUrl(this.endpoints.down, { namespace, name });
-    return this.request<CounterResponseV1>(url, { method: 'GET' });
+    return this.request<CounterResponseV1>(url);
   }
 
-  get(namespace: string, name: string) {
+  async get(namespace: string, name: string): Promise<CounterResponseV1> {
     const url = this.buildUrl(this.endpoints.get, { namespace, name });
-    return this.request<CounterResponseV1>(url, { method: 'GET' });
+    return this.request<CounterResponseV1>(url);
   }
 
-  set(namespace: string, name: string, value: number) {
+  async set(namespace: string, name: string, value: number): Promise<CounterResponseV1> {
     const url = this.buildUrl(this.endpoints.set, { namespace, name, value });
-    return this.request<CounterResponseV1>(url, { method: 'GET' });
+    return this.request<CounterResponseV1>(url);
   }
 } 

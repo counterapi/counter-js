@@ -9,28 +9,33 @@ describe('Counter (v2) integration (real API)', () => {
   it('should up, down, get, reset, and stats', async () => {
     // Up
     const upRes = await counter.up(workspace, name);
-    expect(upRes).toHaveProperty('id');
-    expect(upRes.name).toBe(name);
+    expect(upRes.data).toBeDefined();
+    expect(upRes.data?.id).toBeDefined();
+    expect(upRes.data?.name).toBe(name);
 
     // Down
     const downRes = await counter.down(workspace, name);
-    expect(downRes).toHaveProperty('id');
-    expect(downRes.name).toBe(name);
+    expect(downRes.data).toBeDefined();
+    expect(downRes.data?.id).toBeDefined();
+    expect(downRes.data?.name).toBe(name);
 
     // Get
     const getRes = await counter.get(workspace, name);
-    expect(getRes).toHaveProperty('id');
-    expect(getRes.name).toBe(name);
+    expect(getRes.data).toBeDefined();
+    expect(getRes.data?.id).toBeDefined();
+    expect(getRes.data?.name).toBe(name);
 
     // Stats
     const statsRes = await counter.stats(workspace, name);
-    expect(statsRes).toHaveProperty('up_count');
-    expect(statsRes).toHaveProperty('down_count');
+    expect(statsRes.data).toBeDefined();
+    expect(statsRes.data?.up_count).toBeDefined();
+    expect(statsRes.data?.down_count).toBeDefined();
 
     // Reset
     const resetRes = await counter.reset(workspace, name);
-    expect(resetRes).toHaveProperty('id');
-    expect(resetRes.name).toBe(name);
+    expect(resetRes.data).toBeDefined();
+    expect(resetRes.data?.id).toBeDefined();
+    expect(resetRes.data?.name).toBe(name);
   });
 });
 

@@ -1,48 +1,36 @@
-import { CounterOptions, CounterData, CounterStats, CounterResponse, V2Endpoints, API_CONFIG, CounterBase } from './counterapi.shared.js';
+import { CounterBase, CounterResponse, API_CONFIG, V2Endpoints } from './counterapi.shared.js';
 
-class CounterV2 extends CounterBase<V2Endpoints> {
-  constructor(options: CounterOptions = {}) {
+export class Counter extends CounterBase<V2Endpoints> {
+  constructor(options: { timeoutMs?: number } = {}) {
     super({
-      baseUrl: options.baseUrl || API_CONFIG.v2.baseUrl,
+      baseUrl: API_CONFIG.v2.baseUrl,
       endpoints: API_CONFIG.v2.endpoints,
-      timeoutMs: options.timeoutMs,
+      timeoutMs: options.timeoutMs
     });
   }
 
-  async up(workspace: string, name: string): Promise<CounterData> {
+  async up(workspace: string, name: string): Promise<CounterResponse> {
     const url = this.buildUrl(this.endpoints.up, { workspace, name });
-    const res = await this.request<CounterResponse>(url, { method: 'GET' });
-    if (res.code !== '200' || !res.data) throw new Error(res.message || 'Failed to increment counter');
-    return res.data as CounterData;
+    return this.request<CounterResponse>(url);
   }
 
-  async down(workspace: string, name: string): Promise<CounterData> {
+  async down(workspace: string, name: string): Promise<CounterResponse> {
     const url = this.buildUrl(this.endpoints.down, { workspace, name });
-    const res = await this.request<CounterResponse>(url, { method: 'GET' });
-    if (res.code !== '200' || !res.data) throw new Error(res.message || 'Failed to decrement counter');
-    return res.data as CounterData;
+    return this.request<CounterResponse>(url);
   }
 
-  async get(workspace: string, name: string): Promise<CounterData> {
+  async get(workspace: string, name: string): Promise<CounterResponse> {
     const url = this.buildUrl(this.endpoints.get, { workspace, name });
-    const res = await this.request<CounterResponse>(url, { method: 'GET' });
-    if (res.code !== '200' || !res.data) throw new Error(res.message || 'Failed to get counter');
-    return res.data as CounterData;
+    return this.request<CounterResponse>(url);
   }
 
-  async reset(workspace: string, name: string): Promise<CounterData> {
+  async reset(workspace: string, name: string): Promise<CounterResponse> {
     const url = this.buildUrl(this.endpoints.reset, { workspace, name });
-    const res = await this.request<CounterResponse>(url, { method: 'GET' });
-    if (res.code !== '200' || !res.data) throw new Error(res.message || 'Failed to reset counter');
-    return res.data as CounterData;
+    return this.request<CounterResponse>(url);
   }
 
-  async stats(workspace: string, name: string): Promise<CounterStats> {
+  async stats(workspace: string, name: string): Promise<CounterResponse> {
     const url = this.buildUrl(this.endpoints.stats, { workspace, name });
-    const res = await this.request<CounterResponse>(url, { method: 'GET' });
-    if (res.code !== '200' || !res.data) throw new Error(res.message || 'Failed to get stats');
-    return res.data as CounterStats;
+    return this.request<CounterResponse>(url);
   }
-}
-
-export { CounterV2 as Counter }; 
+} 
