@@ -147,4 +147,4 @@ jobs:
         body: ${{ steps.changelog.outputs.changelog }}
         draft: false
         prerelease: false
-        files: ./counter.js-${{ steps.version.outputs.version }}.tgz
+        files: ./count.js-${{ steps.version.outputs.version }}.tgz
