@@ -67,7 +67,20 @@ describe('CounterV1', () => {
   const counterV1 = new CounterV1();
   const namespace = 'testspace';
   const name = 'testcounter';
-  const mockV1: CounterResponseV1 = { namespace, name, value: 42 };
+  const mockV1: CounterResponseV1 = {
+    id: 1,
+    name,
+    count: 42,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-01T00:00:00Z',
+    namespace_id: 1,
+    namespace: {
+      id: 1,
+      name: namespace,
+      created_at: '2024-01-01T00:00:00Z',
+      updated_at: '2024-01-01T00:00:00Z',
+    },
+  };
   const ok = mockV1;
 
   beforeEach(() => jest.clearAllMocks());

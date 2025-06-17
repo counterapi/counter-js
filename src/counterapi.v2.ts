@@ -1,4 +1,4 @@
-import { CounterOptions, CounterData, CounterStats, CounterResponse, V2Endpoints, API_CONFIG, CounterBase } from './counterapi.shared';
+import { CounterOptions, CounterData, CounterStats, CounterResponse, V2Endpoints, API_CONFIG, CounterBase } from './counterapi.shared.js';
 
 class CounterV2 extends CounterBase<V2Endpoints> {
   constructor(options: CounterOptions = {}) {
