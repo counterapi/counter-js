@@ -35,7 +35,7 @@ export default [
     input: 'src/index.ts',
     external,
     output: {
-      file: 'dist/counter.esm.js',
+      file: 'dist/counterapi.esm.js',
       format: 'es',
       sourcemap: true
     },
@@ -47,7 +47,7 @@ export default [
     input: 'src/index.ts',
     external,
     output: {
-      file: 'dist/counter.js',
+      file: 'dist/counterapi.js',
       format: 'cjs',
       sourcemap: true,
       exports: 'named'
@@ -59,13 +59,13 @@ export default [
   {
     input: 'src/browser.ts',
     output: {
-      file: 'dist/counter.browser.js',
+      file: 'dist/counterapi.browser.js',
       format: 'umd',
       name: 'Counter',
       sourcemap: true,
       exports: 'named',
       globals: {
-        'counter.js': 'Counter'
+        'counterapi.js': 'Counter'
       }
     },
     plugins: browserPlugins
@@ -75,13 +75,13 @@ export default [
   {
     input: 'src/browser.ts',
     output: {
-      file: 'dist/counter.browser.min.js',
+      file: 'dist/counterapi.browser.min.js',
       format: 'umd',
       name: 'Counter',
       sourcemap: true,
       exports: 'named',
       globals: {
-        'counter.js': 'Counter'
+        'counterapi.js': 'Counter'
       }
     },
     plugins: [
