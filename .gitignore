@@ -5,8 +5,40 @@
 .git
 
 # Typescript
-node_modules
+node_modules/
 package-lock.json
 
 # Yarn
 yarn.lock
+
+# Build output
+dist/
+
+# TypeScript
+*.tsbuildinfo
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea/
+.vscode/
+.DS_Store
+
+# Test coverage
+coverage/
+
+# Example app
+example/node_modules/
+example/dist/
+example/*.log
+
+# Misc
+.env
+.env.*
+
+# OS generated files
+Thumbs.db
+.DS_Store

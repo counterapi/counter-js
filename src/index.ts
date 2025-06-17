@@ -1,4 +1,12 @@
-export * from "./counter";
-export * from "./counterAPI";
-export * from "./api.config";
-export * from "./hash";
+// Main exports
+export { Counter, CounterV1 } from './counterapi.js';
+
+// Type exports
+export type {
+  CounterOptions,
+  CounterData,
+  CounterStats,
+  CounterResponse,
+  CounterResponseV1,
+  CounterNamespaceV1
+} from './counterapi.shared.js'; 

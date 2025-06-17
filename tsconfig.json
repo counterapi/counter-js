@@ -1,18 +1,27 @@
 {
   "compilerOptions": {
-    "lib": ["es2015", "dom"],
-    "outDir": "dist",
-    "target": "es5",
-    "module": "commonjs",
+    "target": "ES2020",
+    "module": "ESNext",
     "moduleResolution": "node",
-    "sourceMap": true,
-    "removeComments": true,
-    "noImplicitAny": false,
-    "declaration": true
+    "allowJs": true,
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "./dist/types",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": false,
+    "resolveJsonModule": true
   },
-  "files": [
-    "src/index.ts"
+  "include": [
+    "src/**/*"
   ],
-  "compileOnSave": false,
-  "buildOnSave": false
-}
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ]
+} 
