@@ -1,1 +1,4 @@
-export * from './index.js'; 
+export * from './index.js';
+
+// Browser-specific entry point that exports CounterAPI as default
+export { CounterAPI as default } from './counterapi.js'; 
