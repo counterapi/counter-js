@@ -60,87 +60,66 @@
 <body>
     <h1>CounterAPI Browser Demo</h1>
 
-    <div class="container">
-        <div class="header">
-            <img src="https://usertune.io/img/logo.png" alt="Usertune" class="logo">
-            <h1>Usertune.js CDN Test</h1>
-            <p class="info">Testing library loaded from: <br>
-            <p class="info">Simple usage: <code>new Usertune({workspace: 1})</code></p>
+    <div class="counter">
+        <h2>Counter</h2>
+        <div class="counter-value" id="counter-value">0</div>
+        <div class="counter-buttons">
+            <button id="increment">Increment</button>
+            <button id="decrement">Decrement</button>
+            <button id="reset">Reset</button>
         </div>
-
-        <div class="test-section">
-            <h3>📦 Library Loading Test</h3>
-            <div id="loading-status" class="loading">⏳ Loading library...</div>
-        </div>
-
-        <div class="test-section">
-            <h3>🔧 Client Initialization Test</h3>
-            <div id="init-status">Not started</div>
-        </div>
-
-        <div class="test-section">
-            <h3>📡 Content Retrieval Test</h3>
-            <button id="test-content" disabled>Test Content API</button>
-            <div id="content-status">Waiting for initialization...</div>
-            <pre id="content-result"></pre>
-        </div>
-
-        <div class="test-section">
-            <h3>🎯 Tracking Test</h3>
-            <button id="test-tracking" disabled>Test Tracking API</button>
-            <div id="tracking-status">Need content first...</div>
-            <pre id="tracking-result"></pre>
-        </div>
-
-        <div class="test-section">
-            <h3>❌ Error Handling Test</h3>
-            <button id="test-errors" disabled>Test Error Cases</button>
-            <div id="error-status">Waiting for initialization...</div>
-            <pre id="error-result"></pre>
-        </div>
+        <div id="status" class="success"></div>
     </div>
+
     <script>
-        // Global variables
-        let client = null;
-        let testContent = null;
+        const counter = new CounterAPI();
+        const workspace = 'test';
+        const name = 'test';
 
-        // Utility functions
-        function setStatus(elementId, message, className = 'info') {
-            const element = document.getElementById(elementId);
-            element.innerHTML = message;
-            element.className = className;
-        }
-
-        function setResult(elementId, data) {
-            const element = document.getElementById(elementId);
-            element.textContent = JSON.stringify(data, null, 2);
-        }
-
-        function enableButton(buttonId) {
-            document.getElementById(buttonId).disabled = false;
-        }
-
-        // Test 1: Check if library loaded
-        function testLibraryLoading() {
+        async function updateCounter() {
             try {
-                console.log('CounterAPI object:', window.CounterAPI);
-                console.log('CounterAPI type:', typeof window.CounterAPI);
-
-                if (typeof window.CounterAPI === 'function') {
-                    setStatus('loading-status', '✅ Library loaded successfully!', 'success');
-                } else {
-                    setStatus('loading-status', `❌ Library not found! Type: ${typeof window.CounterAPI}`, 'error');
-                    console.log('Available keys:', Object.keys(window.CounterAPI || {}));
-                }
+                const result = await counter.get(workspace, name);
+                document.getElementById('counter-value').textContent = result.data.up_count;
+                document.getElementById('status').textContent = 'Counter updated successfully!';
+                document.getElementById('status').className = 'success';
             } catch (error) {
-                setStatus('loading-status', `❌ Error: ${error.message}`, 'error');
+                document.getElementById('status').textContent = `Error: ${error.message}`;
+                document.getElementById('status').className = 'error';
             }
         }
 
-        // Start tests when page loads
-        window.addEventListener('load', () => {
-            setTimeout(testLibraryLoading, 100); // Small delay to ensure script loaded
+        document.getElementById('increment').addEventListener('click', async () => {
+            try {
+                await counter.up(workspace, name);
+                await updateCounter();
+            } catch (error) {
+                document.getElementById('status').textContent = `Error: ${error.message}`;
+                document.getElementById('status').className = 'error';
+            }
         });
+
+        document.getElementById('decrement').addEventListener('click', async () => {
+            try {
+                await counter.down(workspace, name);
+                await updateCounter();
+            } catch (error) {
+                document.getElementById('status').textContent = `Error: ${error.message}`;
+                document.getElementById('status').className = 'error';
+            }
+        });
+
+        document.getElementById('reset').addEventListener('click', async () => {
+            try {
+                await counter.reset(workspace, name);
+                await updateCounter();
+            } catch (error) {
+                document.getElementById('status').textContent = `Error: ${error.message}`;
+                document.getElementById('status').className = 'error';
+            }
+        });
+
+        // Initial counter update
+        updateCounter();
     </script>
 </body>
 </html> 
