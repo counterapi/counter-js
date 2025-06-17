@@ -1,5 +1,5 @@
 // Main exports
-export { Counter, CounterV1 } from './counterapi.js';
+export { CounterAPI, CounterAPIv1 } from './counterapi.js';
 
 // Type exports
 export type {

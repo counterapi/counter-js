@@ -159,11 +159,9 @@ npm install counterapi axios
 ### Import and Use (v2 by default)
 
 ```ts
-import Counter from 'counterapi';
-// or
-import { Counter } from 'counterapi';
+import { CounterAPI } from 'counterapi';
 
-const counter = new Counter();
+const counter = new CounterAPI();
 
 // Increment a counter
 const upResult = await counter.up('myworkspace', 'mycounter');
@@ -189,9 +187,9 @@ console.log('Stats:', statsResult);
 ### Use v1 API
 
 ```ts
-import { CounterV1 } from 'counterapi';
+import { CounterAPIv1 } from 'counterapi';
 
-const counterV1 = new CounterV1();
+const counterV1 = new CounterAPIv1();
 
 // Increment a counter
 const upResult = await counterV1.up('myspace', 'mycounter');
@@ -212,14 +210,14 @@ console.log('Set:', setResult.value);
 
 ### API Methods
 
-#### v2 (Counter)
+#### v2 (CounterAPI)
 - `up(workspace, name)`
 - `down(workspace, name)`
 - `get(workspace, name)`
 - `reset(workspace, name)`
 - `stats(workspace, name)`
 
-#### v1 (CounterV1)
+#### v1 (CounterAPIv1)
 - `up(namespace, name)`
 - `down(namespace, name)`
 - `get(namespace, name)`

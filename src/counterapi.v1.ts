@@ -1,6 +1,6 @@
 import { CounterBase, CounterResponseV1, API_CONFIG, V1Endpoints } from './counterapi.shared.js';
 
-export class CounterV1 extends CounterBase<V1Endpoints> {
+export class CounterAPIv1 extends CounterBase<V1Endpoints> {
   constructor(options: { timeoutMs?: number } = {}) {
     super({
       baseUrl: API_CONFIG.v1.baseUrl,

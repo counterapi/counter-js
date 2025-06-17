@@ -1,12 +1,12 @@
 import axios from 'axios';
-import { Counter, CounterV1 } from './counterapi.js';
+import { CounterAPI, CounterAPIv1 } from './counterapi.js';
 import { CounterData, CounterStats, CounterResponseV1 } from './counterapi.shared.js';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.MockedFunction<typeof axios>;
 
-describe('Counter (v2)', () => {
-  const counter = new Counter();
+describe('CounterAPI (v2)', () => {
+  const counter = new CounterAPI();
   const workspace = 'testspace';
   const name = 'testcounter';
   const mockData: CounterData = {
@@ -64,14 +64,14 @@ describe('Counter (v2)', () => {
   });
 });
 
-describe('CounterV1', () => {
-  const counterV1 = new CounterV1();
+describe('CounterAPIv1', () => {
+  const counterV1 = new CounterAPIv1();
   const namespace = 'testspace';
   const name = 'testcounter';
-  const mockV1: CounterResponseV1 = {
+  const mockData: CounterResponseV1 = {
     id: 1,
     name,
-    count: 42,
+    count: 3,
     created_at: '2024-01-01T00:00:00Z',
     updated_at: '2024-01-01T00:00:00Z',
     namespace_id: 1,
@@ -82,31 +82,31 @@ describe('CounterV1', () => {
       updated_at: '2024-01-01T00:00:00Z',
     },
   };
-  const ok = mockV1;
+  const ok = { code: '200', data: mockData };
 
   beforeEach(() => jest.clearAllMocks());
 
   it('up', async () => {
     mockedAxios.mockImplementationOnce(() => Promise.resolve({ data: ok }));
     const res = await counterV1.up(namespace, name);
-    expect(res).toEqual(mockV1);
+    expect(res).toEqual(ok);
   });
 
   it('down', async () => {
     mockedAxios.mockImplementationOnce(() => Promise.resolve({ data: ok }));
     const res = await counterV1.down(namespace, name);
-    expect(res).toEqual(mockV1);
+    expect(res).toEqual(ok);
   });
 
   it('get', async () => {
     mockedAxios.mockImplementationOnce(() => Promise.resolve({ data: ok }));
     const res = await counterV1.get(namespace, name);
-    expect(res).toEqual(mockV1);
+    expect(res).toEqual(ok);
   });
 
   it('set', async () => {
     mockedAxios.mockImplementationOnce(() => Promise.resolve({ data: ok }));
     const res = await counterV1.set(namespace, name, 99);
-    expect(res).toEqual(mockV1);
+    expect(res).toEqual(ok);
   });
 }); 

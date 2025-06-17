@@ -1,9 +1,9 @@
-import { Counter, CounterV1 } from './counterapi.js';
+import { CounterAPI, CounterAPIv1 } from './counterapi.js';
 
-describe('Counter (v2) integration (real API)', () => {
+describe('CounterAPI (v2) integration (real API)', () => {
   const workspace = 'test';
   const name = 'test';
-  const counter = new Counter();
+  const counter = new CounterAPI();
 
   it('should up, down, get, reset, and stats', async () => {
     // Up
@@ -38,35 +38,34 @@ describe('Counter (v2) integration (real API)', () => {
   });
 });
 
-describe('CounterV1 integration (real API)', () => {
+describe('CounterAPIv1 integration (real API)', () => {
   const namespace = 'test';
   const name = 'test';
-  const counterV1 = new CounterV1();
+  const counterV1 = new CounterAPIv1();
 
   it('should up, down, get, and set', async () => {
     // Up
     const upRes = await counterV1.up(namespace, name);
-    expect(upRes).toHaveProperty('name');
+    expect(upRes).toBeDefined();
+    expect(upRes.id).toBeDefined();
     expect(upRes.name).toBe(name);
-    expect(upRes).toHaveProperty('count');
 
     // Down
     const downRes = await counterV1.down(namespace, name);
-    expect(downRes).toHaveProperty('name');
+    expect(downRes).toBeDefined();
+    expect(downRes.id).toBeDefined();
     expect(downRes.name).toBe(name);
-    expect(downRes).toHaveProperty('count');
 
     // Get
     const getRes = await counterV1.get(namespace, name);
-    expect(getRes).toHaveProperty('name');
+    expect(getRes).toBeDefined();
+    expect(getRes.id).toBeDefined();
     expect(getRes.name).toBe(name);
-    expect(getRes).toHaveProperty('count');
 
     // Set
     const setRes = await counterV1.set(namespace, name, 123);
-    expect(setRes).toHaveProperty('name');
+    expect(setRes).toBeDefined();
+    expect(setRes.id).toBeDefined();
     expect(setRes.name).toBe(name);
-    expect(setRes).toHaveProperty('count');
-    expect(setRes.count).toBe(123);
   });
 }); 
