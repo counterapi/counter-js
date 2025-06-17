@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CounterAPI Browser Demo</title>
-    <script src="../../dist/counterapi.browser.min.js"></script>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -55,71 +54,129 @@
             color: #28a745;
             margin: 10px 0;
         }
+        .loading {
+            color: #6c757d;
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
     <h1>CounterAPI Browser Demo</h1>
 
+    <div class="test-section">
+        <h3>📦 Library Loading Test</h3>
+        <div id="loading-status" class="loading">⏳ Loading library...</div>
+    </div>
+
     <div class="counter">
         <h2>Counter</h2>
         <div class="counter-value" id="counter-value">0</div>
         <div class="counter-buttons">
-            <button id="increment">Increment</button>
-            <button id="decrement">Decrement</button>
-            <button id="reset">Reset</button>
+            <button id="increment" disabled>Increment</button>
+            <button id="decrement" disabled>Decrement</button>
+            <button id="reset" disabled>Reset</button>
         </div>
         <div id="status" class="success"></div>
     </div>
 
+    <!-- Load the script -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/counterapi@v2.0.9/dist/counterapi.browser.min.js"></script> -->
+    <script src="../../dist/counterapi.browser.min.js"></script>
+    
     <script>
-        const counter = new CounterAPI();
-        const workspace = 'test';
-        const name = 'test';
-
-        async function updateCounter() {
-            try {
-                const result = await counter.get(workspace, name);
-                document.getElementById('counter-value').textContent = result.data.up_count;
-                document.getElementById('status').textContent = 'Counter updated successfully!';
-                document.getElementById('status').className = 'success';
-            } catch (error) {
-                document.getElementById('status').textContent = `Error: ${error.message}`;
-                document.getElementById('status').className = 'error';
+        // Utility functions
+        function setStatus(elementId, message, className = 'info') {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = message;
+                element.className = className;
             }
         }
 
-        document.getElementById('increment').addEventListener('click', async () => {
-            try {
-                await counter.up(workspace, name);
-                await updateCounter();
-            } catch (error) {
-                document.getElementById('status').textContent = `Error: ${error.message}`;
-                document.getElementById('status').className = 'error';
-            }
-        });
+        function enableButtons(enable) {
+            document.getElementById('increment').disabled = !enable;
+            document.getElementById('decrement').disabled = !enable;
+            document.getElementById('reset').disabled = !enable;
+        }
 
-        document.getElementById('decrement').addEventListener('click', async () => {
+        // Test if library loaded
+        function testLibraryLoading() {
             try {
-                await counter.down(workspace, name);
-                await updateCounter();
-            } catch (error) {
-                document.getElementById('status').textContent = `Error: ${error.message}`;
-                document.getElementById('status').className = 'error';
-            }
-        });
+                console.log('CounterAPI object:', window.CounterAPI);
+                console.log('CounterAPI type:', typeof window.CounterAPI);
 
-        document.getElementById('reset').addEventListener('click', async () => {
+                if (typeof window.CounterAPI === 'function') {
+                    setStatus('loading-status', '✅ Library loaded successfully!', 'success');
+                    initializeCounter();
+                } else {
+                    setStatus('loading-status', `❌ Library not found! Type: ${typeof window.CounterAPI}`, 'error');
+                    console.log('Available keys:', Object.keys(window.CounterAPI || {}));
+                }
+            } catch (error) {
+                setStatus('loading-status', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Initialize counter
+        function initializeCounter() {
             try {
-                await counter.reset(workspace, name);
-                await updateCounter();
-            } catch (error) {
-                document.getElementById('status').textContent = `Error: ${error.message}`;
-                document.getElementById('status').className = 'error';
-            }
-        });
+                const counter = new window.CounterAPI();
+                const workspace = 'test';
+                const name = 'test';
+                
+                // Update counter function
+                async function updateCounter() {
+                    try {
+                        const result = await counter.get(workspace, name);
+                        document.getElementById('counter-value').textContent = result.data.up_count;
+                        setStatus('status', 'Counter updated successfully!', 'success');
+                    } catch (error) {
+                        setStatus('status', `Error: ${error.message}`, 'error');
+                    }
+                }
+                
+                // Add event listeners
+                document.getElementById('increment').addEventListener('click', async () => {
+                    try {
+                        await counter.up(workspace, name);
+                        await updateCounter();
+                    } catch (error) {
+                        setStatus('status', `Error: ${error.message}`, 'error');
+                    }
+                });
 
-        // Initial counter update
-        updateCounter();
+                document.getElementById('decrement').addEventListener('click', async () => {
+                    try {
+                        await counter.down(workspace, name);
+                        await updateCounter();
+                    } catch (error) {
+                        setStatus('status', `Error: ${error.message}`, 'error');
+                    }
+                });
+
+                document.getElementById('reset').addEventListener('click', async () => {
+                    try {
+                        await counter.reset(workspace, name);
+                        await updateCounter();
+                    } catch (error) {
+                        setStatus('status', `Error: ${error.message}`, 'error');
+                    }
+                });
+
+                // Initial counter update
+                updateCounter();
+                
+                // Enable buttons
+                enableButtons(true);
+            } catch (error) {
+                setStatus('loading-status', `❌ Error initializing counter: ${error.message}`, 'error');
+            }
+        }
+
+        // Start tests when page loads
+        window.addEventListener('load', () => {
+            setTimeout(testLibraryLoading, 500); // Longer delay to ensure script loaded
+        });
     </script>
 </body>
 </html> 
