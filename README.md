@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://counterapi.dev/" target="_blank">
-    <img width="180" src="https://counterapi.dev/img/counterapi-logo.svg" alt="logo">
+    <img width="180" src="https://counterapi.dev/img/logo.png" alt="logo">
   </a>
 </p>
 
