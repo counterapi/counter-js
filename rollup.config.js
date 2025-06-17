@@ -2,7 +2,6 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 import terser from '@rollup/plugin-terser';
-import nodePolyfills from 'rollup-plugin-polyfill-node';
 
 const external = ['axios'];
 
@@ -20,7 +19,6 @@ const plugins = [
 ];
 
 const browserPlugins = [
-  nodePolyfills(),
   resolve({
     preferBuiltins: false,
     browser: true
