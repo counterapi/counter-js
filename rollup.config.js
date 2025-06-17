@@ -61,11 +61,11 @@ export default [
     output: {
       file: 'dist/counterapi.browser.js',
       format: 'umd',
-      name: 'Counter',
+      name: 'CounterAPI',
       sourcemap: true,
       exports: 'named',
       globals: {
-        'counterapi.js': 'Counter'
+        'counterapi.js': 'CounterAPI'
       }
     },
     plugins: browserPlugins
@@ -77,11 +77,11 @@ export default [
     output: {
       file: 'dist/counterapi.browser.min.js',
       format: 'umd',
-      name: 'Counter',
+      name: 'CounterAPI',
       sourcemap: true,
       exports: 'named',
       globals: {
-        'counterapi.js': 'Counter'
+        'counterapi.js': 'CounterAPI'
       }
     },
     plugins: [
