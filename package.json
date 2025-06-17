@@ -1,6 +1,6 @@
 {
   "name": "counterapi",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "JavaScript/TypeScript wrapper for CounterAPI (https://counterapi.dev) supporting v1 and v2 endpoints.",
   "type": "module",
   "main": "dist/counterapi.js",
