@@ -2,7 +2,7 @@
 // Import the Counter class from the library
 import { Counter } from '../../dist/counter.esm.js';
 
-// Create a Counter client for v1 API
+// Create a Counter client with default version (v2)
 const counter = new Counter({
   workspace: 'test'
 });

@@ -9,6 +9,6 @@
   },
   "private": true,
   "dependencies": {
-    "counterapi.js": "file:../../"
+    "counterapi": "file:../../"
   }
 } 

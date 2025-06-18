@@ -14,7 +14,7 @@ A lightweight, universal JavaScript client for [CounterAPI](https://counterapi.d
 ## Installation
 
 ```bash
-npm install counterapi.js
+npm install counterapi
 ```
 
 ## Usage
@@ -24,22 +24,22 @@ npm install counterapi.js
 #### ES Modules (recommended)
 
 ```js
-import { Counter } from 'counterapi.js';
+import { Counter } from 'counterapi';
 ```
 
 #### CommonJS
 
 ```js
-const { Counter } = require('counterapi.js');
+const { Counter } = require('counterapi');
 ```
 
 #### Browser via CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/counterapi.js/dist/counter.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/counterapi/dist/counter.browser.min.js"></script>
 <script>
   // Counter is available as a global variable
-  const counter = new Counter({ version: 'v2', namespace: 'my-namespace' });
+  const counter = new Counter({ workspace: 'my-workspace' });
 </script>
 ```
 
@@ -54,12 +54,11 @@ const counterV1 = new Counter({
   timeout: 5000        // Optional: Request timeout in ms (default: 10000)
 });
 
-// For v2 API
+// For v2 API (default)
 const counterV2 = new Counter({
-  version: 'v2',          // Use v2 API
-  namespace: 'my-workspace', // Your workspace name
-  debug: false,           // Optional: Enable debug logging
-  timeout: 5000           // Optional: Request timeout in ms (default: 10000)
+  workspace: 'my-workspace', // Your workspace name
+  debug: false,              // Optional: Enable debug logging
+  timeout: 5000              // Optional: Request timeout in ms (default: 10000)
 });
 ```
 

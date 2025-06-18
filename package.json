@@ -1,5 +1,5 @@
 {
-  "name": "counterapi.js",
+  "name": "counterapi",
   "version": "1.0.0",
   "description": "JavaScript library for CounterAPI (node & browser)",
   "type": "module",
