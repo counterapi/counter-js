@@ -202,7 +202,7 @@ Once published to NPM, your package will be available at:
 <script>
   (function() {
     const counter = new Counter({ workspace: 'your-workspace' });
-    
+
     // Your code here
   })();
 </script>
