@@ -35,7 +35,7 @@ export default [
     input: 'src/index.ts',
     external,
     output: {
-      file: 'dist/usertune.esm.js',
+      file: 'dist/counter.esm.js',
       format: 'es',
       sourcemap: true
     },
@@ -47,7 +47,7 @@ export default [
     input: 'src/index.ts',
     external,
     output: {
-      file: 'dist/usertune.js',
+      file: 'dist/counter.js',
       format: 'cjs',
       sourcemap: true,
       exports: 'named'
@@ -59,13 +59,13 @@ export default [
   {
     input: 'src/browser.ts',
     output: {
-      file: 'dist/usertune.browser.js',
+      file: 'dist/counter.browser.js',
       format: 'umd',
-      name: 'Usertune',
+      name: 'Counter',
       sourcemap: true,
       exports: 'default',
       globals: {
-        'usertune.js': 'Usertune'
+        'counterapi.js': 'Counter'
       }
     },
     plugins: browserPlugins
@@ -75,13 +75,13 @@ export default [
   {
     input: 'src/browser.ts',
     output: {
-      file: 'dist/usertune.browser.min.js',
+      file: 'dist/counter.browser.min.js',
       format: 'umd',
-      name: 'Usertune',
+      name: 'Counter',
       sourcemap: true,
       exports: 'default',
       globals: {
-        'usertune.js': 'Usertune'
+        'counterapi.js': 'Counter'
       }
     },
     plugins: [

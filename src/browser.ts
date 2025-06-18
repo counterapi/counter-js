@@ -1,2 +1,2 @@
-// Browser-specific entry point that exports Usertune as default
-export { Usertune as default } from './client/index.js'; 
+// Browser-specific entry point that exports Counter as default
+export { Counter as default } from './client/index.js'; 

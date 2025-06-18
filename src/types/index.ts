@@ -1,11 +1,11 @@
 /**
- * Configuration options for the Usertune client
+ * Configuration options for the Counter client
  */
-export interface UsertuneConfig {
-  /** The workspace identifier */
-  workspace: string;
-  /** Access token for authentication (optional, required only for private content) */
-  accessToken?: string;
+export interface CounterConfig {
+  /** API version to use (v1 or v2) */
+  version: 'v1' | 'v2';
+  /** The namespace (v1) or workspace (v2) identifier */
+  namespace: string;
   /** Request timeout in milliseconds (optional, defaults to 10000) */
   timeout?: number;
   /** Enable debug logging (optional, defaults to false) */
@@ -13,56 +13,34 @@ export interface UsertuneConfig {
 }
 
 /**
- * Custom attributes that can be passed when retrieving content
- * Values can be strings, numbers, or booleans
+ * Counter response structure
  */
-export interface ContentAttributes {
-  [key: string]: string | number | boolean;
+export interface CounterResponse {
+  /** The current count value */
+  value: number;
+  /** The name of the counter */
+  name: string;
+  /** The namespace (v1) or workspace (v2) of the counter */
+  namespace: string;
+  /** Creation timestamp */
+  created: string;
+  /** Last updated timestamp */
+  updated: string;
 }
 
 /**
- * Response structure for content retrieval
+ * Counter stats response structure (v2 only)
  */
-export interface ContentResponse {
-  /** The actual content data - structure varies based on content type */
-  data: {
-    [key: string]: any;
+export interface CounterStatsResponse extends CounterResponse {
+  /** Stats about the counter usage */
+  stats: {
+    /** Total number of hits */
+    hits: number;
+    /** Usage by date */
+    dates: {
+      [date: string]: number;
+    };
   };
-  /** Metadata about the response */
-  metadata: {
-    /** Content identifier */
-    content_id: number;
-    /** Unique identifier for the variant (null if no personalization) */
-    variant_id: number | null;
-    /** Workspace identifier */
-    workspace_id: number;
-    /** Additional metadata */
-    [key: string]: any;
-  };
-  /** Method to track conversions for this specific content */
-  track: (conversionType: string, conversionValue?: number) => Promise<TrackingResponse>;
-}
-
-/**
- * Options for tracking conversions
- */
-export interface TrackingOptions {
-  /** Type of conversion (e.g., 'purchase', 'signup', 'click') */
-  conversionType: string;
-  /** Monetary value of the conversion (optional) */
-  conversionValue?: number;
-}
-
-/**
- * Response structure for tracking operations
- */
-export interface TrackingResponse {
-  /** Whether the tracking was successful */
-  success: boolean;
-  /** Response message */
-  message?: string;
-  /** Additional response data */
-  [key: string]: any;
 }
 
 /**
@@ -71,6 +49,31 @@ export interface TrackingResponse {
 export interface HttpClient {
   get<T = any>(url: string, config?: any): Promise<T>;
   post<T = any>(url: string, data?: any, config?: any): Promise<T>;
+}
+
+/**
+ * API configuration structure
+ */
+export interface ApiConfig {
+  v1: {
+    baseUrl: string;
+    endpoints: {
+      up: string;
+      down: string;
+      get: string;
+      set: string;
+    };
+  };
+  v2: {
+    baseUrl: string;
+    endpoints: {
+      up: string;
+      down: string;
+      get: string;
+      reset: string;
+      stats: string;
+    };
+  };
 }
 
 /**

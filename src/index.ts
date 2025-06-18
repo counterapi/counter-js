@@ -1,13 +1,12 @@
 // Main exports
-export { Usertune, UsertuneClient } from './client/index.js';
+export { Counter, CounterClient } from './client/index.js';
 
 // Type exports
 export type {
-  UsertuneConfig,
-  ContentAttributes,
-  ContentResponse,
-  TrackingResponse,
-  TrackingOptions,
+  CounterConfig,
+  CounterResponse,
+  CounterStatsResponse,
   HttpClient,
-  ApiError
+  ApiError,
+  ApiConfig
 } from './types/index.js'; 

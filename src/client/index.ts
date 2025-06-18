@@ -1,103 +1,166 @@
 import { 
-  UsertuneConfig, 
-  ContentAttributes, 
-  ContentResponse, 
-  TrackingResponse, 
+  CounterConfig, 
+  CounterResponse,
+  CounterStatsResponse,
   HttpClient 
 } from '../types/index.js';
-import { AxiosHttpClient } from '../http/index.js';
+import { AxiosHttpClient, API_CONFIG } from '../http/index.js';
 
 /**
- * Main Usertune client class
+ * Main Counter client class
  */
-export class Usertune {
+export class Counter {
   private http: HttpClient;
-  private workspace: string;
+  private namespace: string;
+  private version: 'v1' | 'v2';
 
-  constructor(config: UsertuneConfig) {
-    this.workspace = config.workspace;
+  constructor(config: CounterConfig) {
+    this.namespace = config.namespace;
+    this.version = config.version;
     
     // Validate required config
-    if (!config.workspace) {
-      throw new Error('Workspace is required');
+    if (!config.namespace) {
+      throw new Error('Namespace/Workspace is required');
     }
 
     // Initialize HTTP client
     this.http = new AxiosHttpClient({
+      version: this.version,
       timeout: config.timeout,
-      debug: config.debug,
-      accessToken: config.accessToken // Pass even if undefined, HTTP client will handle it
+      debug: config.debug
     });
   }
 
   /**
-   * Filter and validate attributes to only include supported types
+   * Get the current counter value
+   * @param name - The counter name
+   * @returns Promise resolving to counter response
    */
-  private filterAttributes(attributes?: ContentAttributes): ContentAttributes {
-    if (!attributes) return {};
-    
-    const filtered: ContentAttributes = {};
-    
-    for (const [key, value] of Object.entries(attributes)) {
-      if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-        filtered[key] = value;
-      }
-      // Skip null, undefined, objects, arrays, etc.
+  async get(name: string): Promise<CounterResponse> {
+    if (!name) {
+      throw new Error('Counter name is required');
     }
-    
-    return filtered;
+
+    const endpoint = this.createEndpointUrl('get', { name });
+    return await this.http.get<CounterResponse>(endpoint);
   }
 
   /**
-   * Retrieve personalized content
-   * @param contentSlug - The content slug identifier
-   * @param attributes - Optional custom attributes for personalization
-   * @returns Promise resolving to content response with attached track method
+   * Increment the counter value by 1
+   * @param name - The counter name
+   * @returns Promise resolving to counter response
    */
-  async content(contentSlug: string, attributes?: ContentAttributes): Promise<ContentResponse> {
-    if (!contentSlug) {
-      throw new Error('Content slug is required');
+  async up(name: string): Promise<CounterResponse> {
+    if (!name) {
+      throw new Error('Counter name is required');
     }
 
-    const filteredAttributes = this.filterAttributes(attributes);
-    const url = `/v1/workspace/${this.workspace}/${contentSlug}/`;
+    const endpoint = this.createEndpointUrl('up', { name });
+    return await this.http.get<CounterResponse>(endpoint);
+  }
+
+  /**
+   * Decrement the counter value by 1
+   * @param name - The counter name
+   * @returns Promise resolving to counter response
+   */
+  async down(name: string): Promise<CounterResponse> {
+    if (!name) {
+      throw new Error('Counter name is required');
+    }
+
+    const endpoint = this.createEndpointUrl('down', { name });
+    return await this.http.get<CounterResponse>(endpoint);
+  }
+
+  /**
+   * Set the counter value (v1 only)
+   * @param name - The counter name
+   * @param value - The value to set
+   * @returns Promise resolving to counter response
+   */
+  async set(name: string, value: number): Promise<CounterResponse> {
+    if (this.version !== 'v1') {
+      throw new Error('set method is only available in v1');
+    }
     
-    // Use GET request with query parameters for attributes
-    const response = await this.http.get<Omit<ContentResponse, 'track'>>(url, {
-      params: filteredAttributes
-    });
+    if (!name) {
+      throw new Error('Counter name is required');
+    }
+
+    const endpoint = this.createEndpointUrl('set', { name, value });
+    return await this.http.get<CounterResponse>(endpoint);
+  }
+
+  /**
+   * Reset the counter value to 0 (v2 only)
+   * @param name - The counter name
+   * @returns Promise resolving to counter response
+   */
+  async reset(name: string): Promise<CounterResponse> {
+    if (this.version !== 'v2') {
+      throw new Error('reset method is only available in v2');
+    }
     
-    // Create bound track method for this specific content
-    const track = async (conversionType: string, conversionValue?: number): Promise<TrackingResponse> => {
-      if (!conversionType) {
-        throw new Error('Conversion type is required');
-      }
+    if (!name) {
+      throw new Error('Counter name is required');
+    }
 
-      if (!response.metadata.variant_id) {
-        throw new Error('No variant_id available. Cannot track conversions for content without variants.');
-      }
+    const endpoint = this.createEndpointUrl('reset', { name });
+    return await this.http.get<CounterResponse>(endpoint);
+  }
 
-      const trackUrl = `/v1/workspace/${this.workspace}/${contentSlug}/track/`;
-      const params: any = {
-        conversion_type: conversionType,
-        variant_id: response.metadata.variant_id
-      };
+  /**
+   * Get counter statistics (v2 only)
+   * @param name - The counter name
+   * @returns Promise resolving to counter stats response
+   */
+  async stats(name: string): Promise<CounterStatsResponse> {
+    if (this.version !== 'v2') {
+      throw new Error('stats method is only available in v2');
+    }
+    
+    if (!name) {
+      throw new Error('Counter name is required');
+    }
 
-      if (conversionValue !== undefined) {
-        params.conversion_value = conversionValue;
-      }
-      
-      // Use GET request with query parameters
-      return await this.http.get<TrackingResponse>(trackUrl, { params });
+    const endpoint = this.createEndpointUrl('stats', { name });
+    return await this.http.get<CounterStatsResponse>(endpoint);
+  }
+
+  /**
+   * Creates a URL by replacing placeholders in the endpoint pattern
+   */
+  private createEndpointUrl(method: string, params: { name: string, value?: number }): string {
+    // Get the endpoint pattern based on version and method
+    const endpoints = API_CONFIG[this.version].endpoints;
+    let endpointPattern: string | undefined;
+    
+    if (this.version === 'v1') {
+      const v1Endpoints = endpoints as typeof API_CONFIG['v1']['endpoints'];
+      endpointPattern = v1Endpoints[method as keyof typeof v1Endpoints];
+    } else {
+      const v2Endpoints = endpoints as typeof API_CONFIG['v2']['endpoints'];
+      endpointPattern = v2Endpoints[method as keyof typeof v2Endpoints];
+    }
+    
+    if (!endpointPattern) {
+      throw new Error(`Invalid method: ${method}`);
+    }
+
+    // Replace namespace/workspace placeholder based on version
+    const namespaceKey = this.version === 'v1' ? 'namespace' : 'workspace';
+    
+    // Prepare params for URL creation
+    const urlParams = {
+      [namespaceKey]: this.namespace,
+      ...params
     };
-    
-    // Return content response with attached track method
-    return {
-      ...response,
-      track
-    };
+
+    // In axios HTTP client, create the URL by replacing placeholders
+    return (this.http as AxiosHttpClient).createUrl(endpointPattern, urlParams);
   }
 }
 
 // Backward compatibility alias
-export const UsertuneClient = Usertune; 
+export const CounterClient = Counter; 

@@ -1,30 +1,57 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { HttpClient, ApiError } from '../types/index.js';
+import { HttpClient, ApiError, ApiConfig } from '../types/index.js';
+
+/**
+ * API Configuration
+ */
+export const API_CONFIG: ApiConfig = {
+  v1: {
+    baseUrl: 'https://api.counterapi.dev/v1',
+    endpoints: {
+      up: '/{namespace}/{name}/up',
+      down: '/{namespace}/{name}/down',
+      get: '/{namespace}/{name}',
+      set: '/{namespace}/{name}/?count={value}',
+    },
+  },
+  v2: {
+    baseUrl: 'https://api.counterapi.dev/v2',
+    endpoints: {
+      up: '/{workspace}/{name}/up',
+      down: '/{workspace}/{name}/down',
+      get: '/{workspace}/{name}',
+      reset: '/{workspace}/{name}/reset',
+      stats: '/{workspace}/{name}/stats',
+    },
+  },
+};
 
 /**
  * Axios-based HTTP client implementation
  */
 export class AxiosHttpClient implements HttpClient {
   private client: AxiosInstance;
+  private version: 'v1' | 'v2';
 
   constructor(config: {
+    version: 'v1' | 'v2';
     timeout?: number;
     debug?: boolean;
-    accessToken?: string;
   }) {
+    this.version = config.version;
+    
     this.client = axios.create({
-      baseURL: 'https://api.usertune.io',
+      baseURL: API_CONFIG[this.version].baseUrl,
       timeout: config.timeout || 10000,
       headers: {
-        'Content-Type': 'application/json',
-        ...(config.accessToken && { 'Authorization': `Bearer ${config.accessToken}` })
+        'Content-Type': 'application/json'
       }
     });
 
     // Request interceptor for debugging
     if (config.debug) {
       this.client.interceptors.request.use((request) => {
-        console.log('[Usertune] Request:', {
+        console.log('[CounterAPI] Request:', {
           method: request.method?.toUpperCase(),
           url: request.url,
           headers: request.headers,
@@ -38,7 +65,7 @@ export class AxiosHttpClient implements HttpClient {
     this.client.interceptors.response.use(
       (response: AxiosResponse) => {
         if (config.debug) {
-          console.log('[Usertune] Response:', {
+          console.log('[CounterAPI] Response:', {
             status: response.status,
             data: response.data
           });
@@ -47,7 +74,7 @@ export class AxiosHttpClient implements HttpClient {
       },
       (error) => {
         if (config.debug) {
-          console.log('[Usertune] Error:', {
+          console.log('[CounterAPI] Error:', {
             status: error.response?.status,
             data: error.response?.data,
             message: error.message
@@ -65,6 +92,20 @@ export class AxiosHttpClient implements HttpClient {
         throw apiError;
       }
     );
+  }
+
+  /**
+   * Creates a URL by replacing placeholders in the endpoint pattern
+   */
+  createUrl(endpoint: string, params: Record<string, string | number>): string {
+    let url = endpoint;
+    
+    // Replace named parameters in URL pattern
+    for (const [key, value] of Object.entries(params)) {
+      url = url.replace(`{${key}}`, String(value));
+    }
+    
+    return url;
   }
 
   async get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {

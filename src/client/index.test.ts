@@ -1,5 +1,6 @@
-import { Usertune } from './index.js';
-import { HttpClient, TrackingResponse } from '../types/index.js';
+import { Counter } from './index.js';
+import { HttpClient, CounterResponse } from '../types/index.js';
+import { API_CONFIG } from '../http/index.js';
 
 // Mock HTTP client for testing
 class MockHttpClient implements HttpClient {
@@ -28,253 +29,193 @@ class MockHttpClient implements HttpClient {
     return response;
   }
 
+  createUrl(endpoint: string, params: Record<string, string | number>): string {
+    let url = endpoint;
+    for (const [key, value] of Object.entries(params)) {
+      url = url.replace(`{${key}}`, String(value));
+    }
+    return url;
+  }
+
   clear() {
     this.requests = [];
     this.responses.clear();
   }
 }
 
-describe('Usertune', () => {
-  let client: Usertune;
+describe('Counter', () => {
+  let v1Client: Counter;
+  let v2Client: Counter;
   let mockHttp: MockHttpClient;
 
   beforeEach(() => {
     mockHttp = new MockHttpClient();
-    client = new Usertune({
-      workspace: 'test-workspace',
-      accessToken: 'test-token'
+    
+    v1Client = new Counter({
+      version: 'v1',
+      namespace: 'test-namespace'
     });
-    // Replace the HTTP client with our mock
-    (client as any).http = mockHttp;
+    
+    v2Client = new Counter({
+      version: 'v2',
+      namespace: 'test-workspace'
+    });
+    
+    // Replace the HTTP clients with our mock
+    (v1Client as any).http = mockHttp;
+    (v2Client as any).http = mockHttp;
   });
 
   describe('constructor', () => {
-    it('should throw error if workspace is missing', () => {
-      expect(() => new Usertune({ workspace: '' }))
-        .toThrow('Workspace is required');
+    it('should throw error if namespace is missing', () => {
+      expect(() => new Counter({ version: 'v1', namespace: '' }))
+        .toThrow('Namespace/Workspace is required');
     });
 
-    it('should create client with valid config (with accessToken)', () => {
-      const client = new Usertune({
-        workspace: 'test-workspace',
-        accessToken: 'test-token'
+    it('should create v1 client with valid config', () => {
+      const client = new Counter({
+        version: 'v1',
+        namespace: 'test-namespace'
       });
-      expect(client).toBeInstanceOf(Usertune);
+      expect(client).toBeInstanceOf(Counter);
     });
-
-    it('should create client without accessToken for public content', () => {
-      const client = new Usertune({
-        workspace: 'test-workspace'
+    
+    it('should create v2 client with valid config', () => {
+      const client = new Counter({
+        version: 'v2',
+        namespace: 'test-workspace'
       });
-      expect(client).toBeInstanceOf(Usertune);
+      expect(client).toBeInstanceOf(Counter);
     });
   });
 
-  describe('content()', () => {
-    const mockContentResponse = {
-      data: {
-        text: 'Hello Berlin!'
-      },
-      metadata: {
-        content_id: 1,
-        variant_id: 1,
-        workspace_id: 1
+  describe('v1 API', () => {
+    const mockResponse: CounterResponse = {
+      value: 42,
+      name: 'test-counter',
+      namespace: 'test-namespace',
+      created: '2023-01-01T00:00:00Z',
+      updated: '2023-01-01T01:00:00Z'
+    };
+
+    beforeEach(() => {
+      // Set up mock responses for the v1 API endpoints
+      const getUrl = '/{namespace}/{name}';
+      const upUrl = '/{namespace}/{name}/up';
+      const downUrl = '/{namespace}/{name}/down';
+      const setUrl = '/{namespace}/{name}/?count={value}';
+      
+      mockHttp.setResponse(`GET:${getUrl.replace('{namespace}', 'test-namespace').replace('{name}', 'test-counter')}`, mockResponse);
+      mockHttp.setResponse(`GET:${upUrl.replace('{namespace}', 'test-namespace').replace('{name}', 'test-counter')}`, { ...mockResponse, value: 43 });
+      mockHttp.setResponse(`GET:${downUrl.replace('{namespace}', 'test-namespace').replace('{name}', 'test-counter')}`, { ...mockResponse, value: 41 });
+      mockHttp.setResponse(`GET:${setUrl.replace('{namespace}', 'test-namespace').replace('{name}', 'test-counter').replace('{value}', '100')}`, { ...mockResponse, value: 100 });
+    });
+
+    it('should get a counter', async () => {
+      const result = await v1Client.get('test-counter');
+      expect(result).toEqual(mockResponse);
+      expect(mockHttp.requests).toHaveLength(1);
+    });
+
+    it('should increment a counter', async () => {
+      const result = await v1Client.up('test-counter');
+      expect(result).toEqual({ ...mockResponse, value: 43 });
+      expect(mockHttp.requests).toHaveLength(1);
+    });
+
+    it('should decrement a counter', async () => {
+      const result = await v1Client.down('test-counter');
+      expect(result).toEqual({ ...mockResponse, value: 41 });
+      expect(mockHttp.requests).toHaveLength(1);
+    });
+
+    it('should set a counter to specific value', async () => {
+      const result = await v1Client.set('test-counter', 100);
+      expect(result).toEqual({ ...mockResponse, value: 100 });
+      expect(mockHttp.requests).toHaveLength(1);
+    });
+
+    it('should throw error for empty counter name', async () => {
+      await expect(v1Client.get('')).rejects.toThrow('Counter name is required');
+    });
+    
+    it('should throw error when using v2 methods on v1 client', async () => {
+      await expect(v1Client.reset('test-counter')).rejects.toThrow('reset method is only available in v2');
+      await expect(v1Client.stats('test-counter')).rejects.toThrow('stats method is only available in v2');
+    });
+  });
+  
+  describe('v2 API', () => {
+    const mockResponse: CounterResponse = {
+      value: 42,
+      name: 'test-counter',
+      namespace: 'test-workspace',
+      created: '2023-01-01T00:00:00Z',
+      updated: '2023-01-01T01:00:00Z'
+    };
+    
+    const mockStatsResponse = {
+      ...mockResponse,
+      stats: {
+        hits: 100,
+        dates: {
+          '2023-01-01': 50,
+          '2023-01-02': 50
+        }
       }
     };
 
     beforeEach(() => {
-      mockHttp.setResponse('GET:/v1/workspace/test-workspace/test-slug/', mockContentResponse);
-      mockHttp.setResponse('GET:/v1/workspace/test-workspace/test-slug/track/', { success: true });
+      // Set up mock responses for the v2 API endpoints
+      const getUrl = '/{workspace}/{name}';
+      const upUrl = '/{workspace}/{name}/up';
+      const downUrl = '/{workspace}/{name}/down';
+      const resetUrl = '/{workspace}/{name}/reset';
+      const statsUrl = '/{workspace}/{name}/stats';
+      
+      mockHttp.setResponse(`GET:${getUrl.replace('{workspace}', 'test-workspace').replace('{name}', 'test-counter')}`, mockResponse);
+      mockHttp.setResponse(`GET:${upUrl.replace('{workspace}', 'test-workspace').replace('{name}', 'test-counter')}`, { ...mockResponse, value: 43 });
+      mockHttp.setResponse(`GET:${downUrl.replace('{workspace}', 'test-workspace').replace('{name}', 'test-counter')}`, { ...mockResponse, value: 41 });
+      mockHttp.setResponse(`GET:${resetUrl.replace('{workspace}', 'test-workspace').replace('{name}', 'test-counter')}`, { ...mockResponse, value: 0 });
+      mockHttp.setResponse(`GET:${statsUrl.replace('{workspace}', 'test-workspace').replace('{name}', 'test-counter')}`, mockStatsResponse);
     });
 
-    it('should retrieve content without attributes', async () => {
-      const result = await client.content('test-slug');
-
-      expect(result.data).toEqual(mockContentResponse.data);
-      expect(result.metadata).toEqual(mockContentResponse.metadata);
-      expect(typeof result.track).toBe('function');
+    it('should get a counter', async () => {
+      const result = await v2Client.get('test-counter');
+      expect(result).toEqual(mockResponse);
       expect(mockHttp.requests).toHaveLength(1);
-      expect(mockHttp.requests[0]).toEqual({
-        method: 'GET',
-        url: '/v1/workspace/test-workspace/test-slug/',
-        config: { params: {} }
-      });
     });
 
-    it('should retrieve content with attributes', async () => {
-      const attributes = {
-        user_id: 'user123',
-        location: 'san-francisco',
-        premium: true,
-        age: 25
-      };
-
-      const result = await client.content('test-slug', attributes);
-
-      expect(result.data).toEqual(mockContentResponse.data);
-      expect(typeof result.track).toBe('function');
-      expect(mockHttp.requests[0].config.params).toEqual(attributes);
+    it('should increment a counter', async () => {
+      const result = await v2Client.up('test-counter');
+      expect(result).toEqual({ ...mockResponse, value: 43 });
+      expect(mockHttp.requests).toHaveLength(1);
     });
 
-    it('should filter out unsupported attribute types', async () => {
-      const attributes: any = {
-        valid_string: 'test',
-        valid_number: 42,
-        valid_boolean: true,
-        invalid_null: null,
-        invalid_undefined: undefined,
-        invalid_object: { nested: 'value' },
-        invalid_array: [1, 2, 3]
-      };
-
-      await client.content('test-slug', attributes);
-
-      expect(mockHttp.requests[0].config.params).toEqual({
-        valid_string: 'test',
-        valid_number: 42,
-        valid_boolean: true
-      });
+    it('should decrement a counter', async () => {
+      const result = await v2Client.down('test-counter');
+      expect(result).toEqual({ ...mockResponse, value: 41 });
+      expect(mockHttp.requests).toHaveLength(1);
     });
 
-    it('should attach working track method to content', async () => {
-      const content = await client.content('test-slug');
-      
-      const trackResult = await content.track('purchase', 99.99);
-      
-      expect(trackResult).toEqual({ success: true });
-      expect(mockHttp.requests).toHaveLength(2); // content + track
-      expect(mockHttp.requests[1]).toEqual({
-        method: 'GET',
-        url: '/v1/workspace/test-workspace/test-slug/track/',
-        config: {
-          params: {
-            conversion_type: 'purchase',
-            conversion_value: 99.99,
-            variant_id: 1
-          }
-        }
-      });
+    it('should reset a counter', async () => {
+      const result = await v2Client.reset('test-counter');
+      expect(result).toEqual({ ...mockResponse, value: 0 });
+      expect(mockHttp.requests).toHaveLength(1);
+    });
+    
+    it('should get counter stats', async () => {
+      const result = await v2Client.stats('test-counter');
+      expect(result).toEqual(mockStatsResponse);
+      expect(mockHttp.requests).toHaveLength(1);
     });
 
-    it('should throw error for empty content slug', async () => {
-      await expect(client.content('')).rejects.toThrow('Content slug is required');
+    it('should throw error for empty counter name', async () => {
+      await expect(v2Client.get('')).rejects.toThrow('Counter name is required');
     });
-
-    it('should work without accessToken for public content', async () => {
-      // Create a client without accessToken
-      const publicClient = new Usertune({
-        workspace: 'test-workspace'
-      });
-      
-      // Replace with mock HTTP client
-      const publicMockHttp = new MockHttpClient();
-      (publicClient as any).http = publicMockHttp;
-      
-      // Set up mock response
-      const publicContentResponse = {
-        data: {
-          title: 'Public Content',
-          content: 'This is publicly accessible content'
-        },
-        metadata: {
-          content_id: 2,
-          variant_id: null, // Public content typically has no variant
-          workspace_id: 1
-        }
-      };
-      
-      publicMockHttp.setResponse('GET:/v1/workspace/test-workspace/public-slug/', publicContentResponse);
-      
-      const result = await publicClient.content('public-slug');
-      
-      expect(result.data).toEqual(publicContentResponse.data);
-      expect(result.metadata).toEqual(publicContentResponse.metadata);
-      expect(typeof result.track).toBe('function');
-      expect(publicMockHttp.requests).toHaveLength(1);
-      expect(publicMockHttp.requests[0]).toEqual({
-        method: 'GET',
-        url: '/v1/workspace/test-workspace/public-slug/',
-        config: { params: {} }
-      });
-    });
-
-    it('should throw error when tracking content without variant_id', async () => {
-      const contentWithoutVariant = {
-        data: { title: 'Static Content' },
-        metadata: { 
-          content_id: 3,
-          variant_id: null, 
-          workspace_id: 1 
-        }
-      };
-      
-      mockHttp.setResponse('GET:/v1/workspace/test-workspace/static/', contentWithoutVariant);
-      
-      const content = await client.content('static');
-      
-      await expect(content.track('view')).rejects.toThrow(
-        'No variant_id available. Cannot track conversions for content without variants.'
-      );
-    });
-  });
-
-  describe('integration scenarios', () => {
-    it('should handle complete flow: content -> track', async () => {
-      const contentResponse = {
-        data: { title: 'Test' },
-        metadata: { 
-          content_id: 1,
-          variant_id: 1, 
-          workspace_id: 1 
-        }
-      };
-      
-      const trackingResponse: TrackingResponse = {
-        success: true
-      };
-
-      mockHttp.setResponse('GET:/v1/workspace/test-workspace/banner/', contentResponse);
-      mockHttp.setResponse('GET:/v1/workspace/test-workspace/banner/track/', trackingResponse);
-
-      // Get content
-      const content = await client.content('banner', { user_tier: 'premium' });
-      expect(content.data).toEqual(contentResponse.data);
-      expect(content.metadata).toEqual(contentResponse.metadata);
-      expect(typeof content.track).toBe('function');
-
-      // Track conversion using the content's track method
-      const trackResult = await content.track('signup', 50);
-      expect(trackResult).toEqual(trackingResponse);
-
-      // Verify requests
-      expect(mockHttp.requests).toHaveLength(2);
-      expect(mockHttp.requests[0].config.params).toEqual({ user_tier: 'premium' });
-      expect(mockHttp.requests[1].config.params).toEqual({
-        conversion_type: 'signup',
-        conversion_value: 50,
-        variant_id: 1
-      });
-    });
-
-    it('should handle content with null variant_id', async () => {
-      const contentResponse = {
-        data: { title: 'Static Content' },
-        metadata: { 
-          content_id: 3,
-          variant_id: null, 
-          workspace_id: 1 
-        }
-      };
-
-      mockHttp.setResponse('GET:/v1/workspace/test-workspace/static/', contentResponse);
-
-      const content = await client.content('static');
-      expect(content.metadata.variant_id).toBeNull();
-
-      // Should not be able to track
-      await expect(content.track('view')).rejects.toThrow(
-        'No variant_id available. Cannot track conversions for content without variants.'
-      );
+    
+    it('should throw error when using v1 methods on v2 client', async () => {
+      await expect(v2Client.set('test-counter', 100)).rejects.toThrow('set method is only available in v1');
     });
   });
 }); 

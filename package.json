@@ -1,17 +1,17 @@
 {
-  "name": "usertune.js",
-  "version": "1.1.0",
-  "description": "JavaScript library for Usertune's API (node & browser)",
+  "name": "counterapi.js",
+  "version": "1.0.0",
+  "description": "JavaScript library for CounterAPI (node & browser)",
   "type": "module",
-  "main": "dist/usertune.js",
-  "module": "dist/usertune.esm.js",
-  "browser": "dist/usertune.browser.js",
+  "main": "dist/counter.js",
+  "module": "dist/counter.esm.js",
+  "browser": "dist/counter.browser.js",
   "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/usertune.esm.js",
-      "require": "./dist/usertune.js",
-      "browser": "./dist/usertune.browser.js",
+      "import": "./dist/counter.esm.js",
+      "require": "./dist/counter.js",
+      "browser": "./dist/counter.browser.js",
       "types": "./dist/types/index.d.ts"
     },
     "./package.json": "./package.json"
@@ -27,6 +27,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "test:integration": "cross-env RUN_INTEGRATION_TESTS=true jest src/integration.test.ts",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "typecheck": "tsc --noEmit",
@@ -34,31 +35,26 @@
     "prepublishOnly": "npm run build && npm run test && npm run lint"
   },
   "keywords": [
-    "usertune",
-    "personalization",
-    "content",
+    "counterapi",
+    "counter",
+    "hit counter",
     "api",
     "javascript",
     "typescript",
-    "sdk",
-    "ab-testing",
-    "optimization",
-    "conversion-tracking"
+    "sdk"
   ],
   "author": {
-    "name": "Usertune",
-    "email": "support@usertune.io",
-    "url": "https://usertune.io"
+    "name": "CounterAPI"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/usertune/usertune.js.git"
+    "url": "https://github.com/counterapi/counter.js.git"
   },
   "bugs": {
-    "url": "https://github.com/usertune/usertune.js/issues"
+    "url": "https://github.com/counterapi/counter.js/issues"
   },
-  "homepage": "https://github.com/usertune/usertune.js#readme",
+  "homepage": "https://github.com/counterapi/counter.js#readme",
   "publishConfig": {
     "access": "public"
   },
@@ -71,6 +67,7 @@
     "@types/node": "^22.0.0",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
+    "cross-env": "^7.0.3",
     "eslint": "^8.53.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
