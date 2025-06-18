@@ -2,8 +2,8 @@
  * Configuration options for the Counter client
  */
 export interface CounterConfig {
-  /** API version to use (v1 or v2) */
-  version: 'v1' | 'v2';
+  /** API version to use (v1 or v2, defaults to 'v2' if not specified) */
+  version?: 'v1' | 'v2';
   /** The namespace (v1) or workspace (v2) identifier */
   namespace: string;
   /** Request timeout in milliseconds (optional, defaults to 10000) */

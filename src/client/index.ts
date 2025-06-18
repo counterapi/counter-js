@@ -16,7 +16,7 @@ export class Counter {
 
   constructor(config: CounterConfig) {
     this.namespace = config.namespace;
-    this.version = config.version;
+    this.version = config.version || 'v2'; // Default to v2 if not specified
     
     // Validate required config
     if (!config.namespace) {

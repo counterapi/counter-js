@@ -1,0 +1,14 @@
+{
+  "name": "counterapi-hello-world",
+  "version": "1.0.0",
+  "description": "Simple hello world example using CounterAPI",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "private": true,
+  "dependencies": {
+    "counterapi.js": "file:../../"
+  }
+} 
