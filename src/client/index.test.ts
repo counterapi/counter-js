@@ -1,32 +1,31 @@
 import { Counter } from './index.js';
 import { HttpClient, CounterResponse } from '../types/index.js';
-import { API_CONFIG } from '../http/index.js';
 
 // Mock HTTP client for testing
 class MockHttpClient implements HttpClient {
-  public requests: Array<{ method: string; url: string; data?: any; config?: any }> = [];
-  private responses: Map<string, any> = new Map();
+  public requests: Array<{ method: string; url: string; data?: unknown; config?: Record<string, unknown> }> = [];
+  private responses: Map<string, unknown> = new Map();
 
-  setResponse(key: string, response: any) {
+  setResponse(key: string, response: unknown): void {
     this.responses.set(key, response);
   }
 
-  async get<T = any>(url: string, config?: any): Promise<T> {
+  async get<T>(url: string, config?: Record<string, unknown>): Promise<T> {
     this.requests.push({ method: 'GET', url, config });
     const response = this.responses.get(`GET:${url}`);
     if (!response) {
       throw new Error(`No mock response for GET:${url}`);
     }
-    return response;
+    return response as T;
   }
 
-  async post<T = any>(url: string, data?: any, config?: any): Promise<T> {
+  async post<T>(url: string, data?: unknown, config?: Record<string, unknown>): Promise<T> {
     this.requests.push({ method: 'POST', url, data, config });
     const response = this.responses.get(`POST:${url}`);
     if (!response) {
       throw new Error(`No mock response for POST:${url}`);
     }
-    return response;
+    return response as T;
   }
 
   createUrl(endpoint: string, params: Record<string, string | number>): string {
@@ -37,7 +36,7 @@ class MockHttpClient implements HttpClient {
     return url;
   }
 
-  clear() {
+  clear(): void {
     this.requests = [];
     this.responses.clear();
   }
@@ -61,15 +60,21 @@ describe('Counter', () => {
       namespace: 'test-workspace'
     });
     
-    // Replace the HTTP clients with our mock
-    (v1Client as any).http = mockHttp;
-    (v2Client as any).http = mockHttp;
+    // Replace the HTTP clients with our mock using type assertion
+    // We need to cast to unknown first to avoid TypeScript errors with private properties
+    (v1Client as unknown as { http: HttpClient }).http = mockHttp;
+    (v2Client as unknown as { http: HttpClient }).http = mockHttp;
   });
 
   describe('constructor', () => {
-    it('should throw error if namespace is missing', () => {
+    it('should throw error if namespace is missing for v1', () => {
       expect(() => new Counter({ version: 'v1', namespace: '' }))
-        .toThrow('Namespace/Workspace is required');
+        .toThrow('Namespace is required for v1 API');
+    });
+    
+    it('should throw error if workspace is missing for v2', () => {
+      expect(() => new Counter({ version: 'v2', workspace: '' }))
+        .toThrow('Workspace is required for v2 API');
     });
 
     it('should create v1 client with valid config', () => {

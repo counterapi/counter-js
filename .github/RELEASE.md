@@ -1,6 +1,6 @@
 # Manual Release Workflow
 
-This document explains how to use the manual release GitHub Action to create new versions of the usertune.js package.
+This document explains how to use the manual release GitHub Action to create new versions of the counterapi package.
 
 ## Overview
 
@@ -18,7 +18,7 @@ All in a single workflow execution.
 
 ### 1. Navigate to GitHub Actions
 
-1. Go to your repository: [https://github.com/usertune/usertune.js](https://github.com/usertune/usertune.js)
+1. Go to your repository: [https://github.com/counterapi/counter.js](https://github.com/counterapi/counter.js)
 2. Click on the "Actions" tab
 3. In the left sidebar, click on "Release"
 
@@ -81,13 +81,13 @@ Release notes: "Fixed issue with authentication headers in browser environments"
 ### New Feature Release
 ```
 Version bump type: minor
-Release notes: "Added support for batch content retrieval and improved error handling"
+Release notes: "Added support for batch counter retrieval and improved error handling"
 ```
 
 ### Breaking Change Release
 ```
 Version bump type: major
-Release notes: "BREAKING: Removed deprecated UsertuneClient alias. Use Usertune class instead."
+Release notes: "BREAKING: Removed deprecated CounterClient alias. Use Counter class instead."
 ```
 
 ## Release Timeline
@@ -105,11 +105,11 @@ Release notes: "BREAKING: Removed deprecated UsertuneClient alias. Use Usertune 
 - All steps (testing, versioning, NPM publish, GitHub release) happen in one workflow
 
 ### GitHub Release
-- Check the [Releases page](https://github.com/usertune/usertune.js/releases)
+- Check the [Releases page](https://github.com/counterapi/counter.js/releases)
 - Verify the release was created with correct version and notes
 
 ### NPM Package
-- Check [npmjs.com/package/usertune.js](https://npmjs.com/package/usertune.js) for the new version
+- Check [npmjs.com/package/counterapi](https://npmjs.com/package/counterapi) for the new version
 - Package should be available immediately after workflow completes
 
 ### Rollback if Needed

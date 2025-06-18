@@ -49,8 +49,9 @@ export interface CounterStatsResponse extends CounterResponse {
  * HTTP client interface for dependency injection
  */
 export interface HttpClient {
-  get<T = any>(url: string, config?: any): Promise<T>;
-  post<T = any>(url: string, data?: any, config?: any): Promise<T>;
+  get<T>(url: string, config?: Record<string, unknown>): Promise<T>;
+  post<T>(url: string, data?: unknown, config?: Record<string, unknown>): Promise<T>;
+  createUrl(endpoint: string, params: Record<string, string | number>): string;
 }
 
 /**
@@ -89,5 +90,5 @@ export interface ApiError {
   /** HTTP status code */
   status?: number;
   /** Additional error details */
-  details?: any;
+  details?: Record<string, unknown>;
 } 
