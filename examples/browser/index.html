@@ -136,22 +136,13 @@
 
     <!-- Load the CounterAPI library from CDN (in production) or local build (for development) -->
     <script>
-        // Check if we're in development or production
-        const isDev = window.location.hostname === 'localhost' || 
-                     window.location.hostname === '127.0.0.1';
-        
         // Create script element
         const script = document.createElement('script');
         script.async = true;
         
-        if (isDev) {
-            // For local development use the local build
-            script.src = '../../dist/counter.browser.js';
-        } else {
-            // For production use the CDN
-            script.src = 'https://cdn.jsdelivr.net/npm/counterapi/dist/counter.browser.js';
-        }
-        
+        // For production use the CDN
+        script.src = 'https://cdn.jsdelivr.net/npm/counterapi/dist/counter.browser.min.js';
+
         // When script is loaded, initialize the application
         script.onload = initApp;
         

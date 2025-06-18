@@ -78,6 +78,7 @@ console.log(`Current count: ${counter.value}`);
 // Increment a counter by 1
 const counter = await counterClient.up('page-views');
 console.log(`New count after increment: ${counter.value}`);
+console.log(`Up count: ${counter.data.up_count}, Down count: ${counter.data.down_count}`);
 ```
 
 #### Decrement Counter
@@ -86,6 +87,7 @@ console.log(`New count after increment: ${counter.value}`);
 // Decrement a counter by 1
 const counter = await counterClient.down('page-views');
 console.log(`New count after decrement: ${counter.value}`);
+console.log(`Up count: ${counter.data.up_count}, Down count: ${counter.data.down_count}`);
 ```
 
 #### Set Counter Value (V1 API only)
@@ -108,39 +110,87 @@ console.log(`Counter reset to: ${counter.value}`);
 
 ```js
 // Get statistics for a counter
-const stats = await counterV2.stats('page-views');
-console.log(`Current value: ${stats.value}`);
-console.log(`Total hits: ${stats.stats.hits}`);
-console.log('Usage by date:', stats.stats.dates);
+const result = await counterV2.stats('page-views');
+console.log(`Up count: ${result.data.up_count}`);
+console.log(`Down count: ${result.data.down_count}`);
+console.log(`Today's up count: ${result.data.stats.today.up}`);
+console.log(`This week's down count: ${result.data.stats.this_week.down}`);
+console.log(`Most active hour: ${getMostActiveHour(result.data.stats.temporal.hours)}`);
 ```
 
-### Response Type
+### Response Types
 
-All API methods return a Promise that resolves to a counter response object:
+#### Standard Counter Response
+
+Basic counter operations return a response with this structure:
 
 ```js
 {
-  value: 42,              // Current counter value
-  name: 'page-views',     // Counter name
-  namespace: 'my-app',    // Namespace or workspace
-  created: '2023-...',    // Creation timestamp
-  updated: '2023-...'     // Last updated timestamp
+  code: "200",
+  data: {
+    created_at: "2025-06-17T11:33:23Z",
+    description: "",
+    down_count: 4,
+    id: 1,
+    name: "test",
+    slug: "test",
+    team_id: 4,
+    up_count: 4,
+    updated_at: "2025-06-17T11:33:23Z",
+    user_id: 7,
+    workspace_id: 1,
+    workspace_slug: "test"
+  }
 }
 ```
 
-The `stats()` method in v2 API also includes a `stats` property:
+#### Stats Response (V2 API)
+
+The `stats()` method returns a comprehensive statistics object:
 
 ```js
 {
-  // ... standard counter fields
-  stats: {
-    hits: 42,             // Total number of hits
-    dates: {              // Usage by date
-      '2023-01-01': 5,
-      '2023-01-02': 10
-      // ...
-    }
-  }
+  code: "200",
+  data: {
+    id: 1,
+    counter_id: 1,
+    up_count: 6,
+    down_count: 4,
+    stats: {
+      today: {
+        up: 6,
+        down: 4
+      },
+      this_week: {
+        up: 6,
+        down: 4
+      },
+      temporal: {
+        hours: {
+          // Hourly breakdown (00-23)
+          "07": { up: 6, down: 4 },
+          // ... other hours
+        },
+        weekdays: {
+          // Day of week breakdown
+          "monday": { up: 0, down: 0 },
+          "tuesday": { up: 0, down: 0 },
+          "wednesday": { up: 6, down: 4 },
+          // ... other days
+        },
+        quarters: {
+          // Quarterly breakdown
+          "q1": { up: 0, down: 0 },
+          "q2": { up: 6, down: 4 },
+          "q3": { up: 0, down: 0 },
+          "q4": { up: 0, down: 0 }
+        }
+      }
+    },
+    created_at: "2025-06-17T11:33:23Z",
+    updated_at: "2025-06-18T07:44:11Z"
+  },
+  message: "Counter stats retrieved successfully"
 }
 ```
 
@@ -160,7 +210,74 @@ try {
 
 ## Examples
 
-See the [examples](./examples) directory for more usage examples.
+We provide ready-to-use examples to help you get started with CounterAPI:
+
+### Browser Example
+
+The [browser example](./examples/browser) demonstrates how to use CounterAPI in a web application:
+
+- Interactive UI for counter operations
+- Display of up and down counts
+- Visualization of counter statistics
+- Real-time API responses
+
+To run the browser example:
+
+```bash
+# Build the library first
+npm run build
+
+# Serve the example using a web server
+cd examples/browser
+python -m http.server 8000
+# Then open http://localhost:8000 in your browser
+```
+
+### Node.js Example
+
+The [Node.js example](./examples/node) shows how to use CounterAPI in a server-side application:
+
+- Simple counter retrieval
+- Using ESM imports
+- Error handling
+
+To run the Node.js example:
+
+```bash
+# Build the library first
+npm run build
+
+# Run the example
+cd examples/node
+node index.js
+```
+
+### Visualizing Stats
+
+You can use the stats data to create visualizations:
+
+```js
+// Example: Creating a simple chart from hourly stats
+function createHourlyChart(stats) {
+  const hours = stats.data.stats.temporal.hours;
+  const labels = Object.keys(hours).sort();
+  const upData = labels.map(hour => hours[hour].up);
+  const downData = labels.map(hour => hours[hour].down);
+  
+  // Use your preferred charting library
+  renderChart({
+    labels,
+    datasets: [
+      { label: 'Up', data: upData },
+      { label: 'Down', data: downData }
+    ]
+  });
+}
+
+// Example usage
+const stats = await counter.stats('my-counter');
+createHourlyChart(stats);
+```
 
 ## License
 
