@@ -19,6 +19,12 @@
       ]
     },
     {
+      "enabled": false,
+      "matchUpdateTypes": [
+        "patch"
+      ]
+    },
+    {
       "enabled": true,
       "automerge": false,
       "matchUpdateTypes": [
