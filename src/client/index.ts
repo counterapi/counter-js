@@ -15,12 +15,24 @@ export class Counter {
   private version: 'v1' | 'v2';
 
   constructor(config: CounterConfig) {
-    this.namespace = config.namespace;
     this.version = config.version || 'v2'; // Default to v2 if not specified
     
+    // Handle namespace/workspace parameter based on version
+    if (this.version === 'v2') {
+      // For v2, prefer workspace parameter if provided, otherwise fall back to namespace
+      this.namespace = config.workspace || config.namespace || '';
+    } else {
+      // For v1, use namespace parameter
+      this.namespace = config.namespace || '';
+    }
+    
     // Validate required config
-    if (!config.namespace) {
-      throw new Error('Namespace/Workspace is required');
+    if (!this.namespace) {
+      if (this.version === 'v2') {
+        throw new Error('Workspace is required for v2 API');
+      } else {
+        throw new Error('Namespace is required for v1 API');
+      }
     }
 
     // Initialize HTTP client

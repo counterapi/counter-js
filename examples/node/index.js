@@ -4,7 +4,7 @@ import { Counter } from '../../dist/counter.esm.js';
 
 // Create a Counter client for v1 API
 const counter = new Counter({
-  namespace: 'test'
+  workspace: 'test'
 });
 
 // Get the counter named 'test'
