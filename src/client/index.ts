@@ -39,7 +39,8 @@ export class Counter {
     this.http = new AxiosHttpClient({
       version: this.version,
       timeout: config.timeout,
-      debug: config.debug
+      debug: config.debug,
+      accessToken: config.accessToken
     });
   }
 

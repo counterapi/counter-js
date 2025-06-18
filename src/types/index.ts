@@ -12,6 +12,8 @@ export interface CounterConfig {
   timeout?: number;
   /** Enable debug logging (optional, defaults to false) */
   debug?: boolean;
+  /** Authentication token for API requests (v2 only) */
+  accessToken?: string;
 }
 
 /**

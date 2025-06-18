@@ -32,19 +32,23 @@ export const API_CONFIG: ApiConfig = {
 export class AxiosHttpClient implements HttpClient {
   private client: AxiosInstance;
   private version: 'v1' | 'v2';
+  private accessToken?: string;
 
   constructor(config: {
     version: 'v1' | 'v2';
     timeout?: number;
     debug?: boolean;
+    accessToken?: string;
   }) {
     this.version = config.version;
-    
+    this.accessToken = config.accessToken;
+
     this.client = axios.create({
       baseURL: API_CONFIG[this.version].baseUrl,
       timeout: config.timeout || 10000,
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...(config.accessToken && { 'Authorization': `Bearer ${config.accessToken}` })
       }
     });
 

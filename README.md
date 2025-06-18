@@ -51,14 +51,15 @@ const counterV1 = new Counter({
   version: 'v1',       // Use v1 API
   namespace: 'my-app', // Your namespace
   debug: false,        // Optional: Enable debug logging
-  timeout: 5000        // Optional: Request timeout in ms (default: 10000)
+  timeout: 5000,       // Optional: Request timeout in ms (default: 10000)
 });
 
 // For v2 API (default)
 const counterV2 = new Counter({
   workspace: 'my-workspace', // Your workspace name
   debug: false,              // Optional: Enable debug logging
-  timeout: 5000              // Optional: Request timeout in ms (default: 10000)
+  timeout: 5000,             // Optional: Request timeout in ms (default: 10000)
+  accessToken: 'your-token'  // Optional: Authentication token for API requests
 });
 ```
 
