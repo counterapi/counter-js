@@ -1,5 +1,5 @@
 // Main exports
-export { CounterAPI, CounterAPIv1 } from './counterapi.js';
+export { CounterAPI, CounterAPIv1 } from './client/index.js';
 
 // Type exports
 export type {
@@ -8,5 +8,7 @@ export type {
   CounterStats,
   CounterResponse,
   CounterResponseV1,
-  CounterNamespaceV1
-} from './counterapi.shared.js'; 
+  CounterNamespaceV1,
+  HttpClient,
+  ApiError
+} from './types/index.js'; 
