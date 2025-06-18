@@ -1,2 +1,2 @@
-// Browser-specific entry point that exports CounterAPI as default
-export { CounterAPI as default } from './client/index.js'; 
+// Browser-specific entry point that exports Counter as default
+export { Counter as default } from './client/index.js'; 

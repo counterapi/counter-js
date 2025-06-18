@@ -6,7 +6,7 @@
     "allowJs": true,
     "declaration": true,
     "declarationMap": true,
-    "outDir": "./dist",
+    "outDir": "./dist/types",
     "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,

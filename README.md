@@ -1,230 +1,167 @@
-# CounterAPI JavaScript/TypeScript Library
+# CounterAPI JavaScript Client
 
-> Main library code is located in `src/counterapi.ts`.
+A lightweight, universal JavaScript client for [CounterAPI](https://counterapi.dev) - a simple API for tracking and managing counters.
 
-<p align="center">
-  <a href="https://counterapi.dev/" target="_blank">
-    <img width="180" src="https://counterapi.dev/img/logo.png" alt="logo">
-  </a>
-</p>
+## Features
 
-<p align="center">
-    <img src="https://img.shields.io/npm/dm/counterapi.svg" alt="Downloads">
-    <img src="https://img.shields.io/github/workflow/status/counterapi/counter-js/Tests" alt="Check">
-    <a href="https://www.npmjs.com/package/counterapi"><img src="https://img.shields.io/npm/v/counterapi.svg" alt="Version"></a>
-    <a href="https://github.com/counterapi/counter-js/blob/master/LICENSE"><img src="https://img.shields.io/github/license/counterapi/counter-js" alt="License"></a>
-</p>
+- Universal JavaScript library (Node.js, browser, ESM)
+- Support for both v1 and v2 CounterAPI endpoints
+- Promise-based API
+- TypeScript support
+- Custom error handling
+- Debugging mode
 
-## Documentation
+## Installation
 
-Counter API Javascript Library
-
-Check out our docs at https://counterapi.dev/.
-
-## How to use
-
-### Increase by Name
-
-```typescript
-import {CounterAPI} from "counterapi";
-
-const counter = new CounterAPI();
-
-counter.up("test", "test").then((res) => {
-    console.log(res)
-})
-```
-
-Output
-
-```shell
-Counter {
-  ID: 1,
-  Name: 'test',
-  Count: 15,
-  UpdatedAt: '2023-03-27T13:33:51.315934+01:00',
-  CreatedAt: '2023-03-26T21:46:18.624369+08:00'
-}
-```
-
-### Decrease by Name
-
-```typescript
-import {CounterAPI} from "counterapi";
-
-const counter = new CounterAPI();
-
-counter.down("test", "test").then((res) => {
-    console.log(res)
-})
-```
-
-Output
-
-```shell
-Counter {
-  ID: 1,
-  Name: 'test',
-  Count: 14,
-  UpdatedAt: '2023-03-27T13:33:51.315934+01:00',
-  CreatedAt: '2023-03-26T21:46:18.624369+08:00'
-}
-```
-
-### Get by Name
-
-```typescript
-import {CounterAPI} from "counterapi";
-
-const counter = new CounterAPI();
-
-counter.get("test", "test").then((res) => {
-    console.log(res)
-})
-```
-
-Output
-
-```shell
-Counter {
-  ID: 1,
-  Name: 'test',
-  Count: 14,
-  UpdatedAt: '2023-03-27T13:33:51.315934+01:00',
-  CreatedAt: '2023-03-26T21:46:18.624369+08:00'
-}
-```
-
-### Set by Name
-
-```typescript
-import {CounterAPI} from "counterapi";
-
-const counter = new CounterAPI();
-
-counter.set("test", "test", 10).then((res) => {
-    console.log(res)
-})
-```
-
-Output
-
-```shell
-Counter {
-  ID: 1,
-  Name: 'test',
-  Count: 10,
-  UpdatedAt: '2023-03-27T13:33:51.315934+01:00',
-  CreatedAt: '2023-03-26T21:46:18.624369+08:00'
-}
-```
-
-### Get Count List by Name
-
-```typescript
-import {CounterAPI, GroupByTypes, OrderByTypes} from "counterapi";
-
-const counter = new CounterAPI();
-
-const q = {
-    group_by: GroupByTypes.Day,
-    order_by: OrderByTypes.ASC,
-};
-
-counter.counts("test", "test", q).then((res) => {
-    console.log(res);
-});
-```
-
-Output
-
-```shell
-[
-  Count { Count: 2, Date: '2023-03-07T00:00:00+08:00' },
-  Count { Count: 14, Date: '2023-03-26T00:00:00+08:00' },
-  Count { Count: 40, Date: '2023-03-27T00:00:00+08:00' }
-]
+```bash
+npm install counterapi
 ```
 
 ## Usage
 
-### Install
+### Import
 
-```
-npm install counterapi axios
-```
+#### ES Modules (recommended)
 
-> **Note:** This library uses [axios](https://github.com/axios/axios) for HTTP requests. Make sure you have it installed as shown above.
-
-### Import and Use (v2 by default)
-
-```ts
-import { CounterAPI } from 'counterapi';
-
-const counter = new CounterAPI();
-
-// Increment a counter
-const upResult = await counter.up('myworkspace', 'mycounter');
-console.log('Up:', upResult.value);
-
-// Decrement a counter
-const downResult = await counter.down('myworkspace', 'mycounter');
-console.log('Down:', downResult.value);
-
-// Get current value
-const getResult = await counter.get('myworkspace', 'mycounter');
-console.log('Get:', getResult.value);
-
-// Reset the counter
-const resetResult = await counter.reset('myworkspace', 'mycounter');
-console.log('Reset:', resetResult.value);
-
-// Get stats
-const statsResult = await counter.stats('myworkspace', 'mycounter');
-console.log('Stats:', statsResult);
+```js
+import { Counter } from 'counterapi';
 ```
 
-### Use v1 API
+#### CommonJS
 
-```ts
-import { CounterAPIv1 } from 'counterapi';
+```js
+const { Counter } = require('counterapi');
+```
 
-const counterV1 = new CounterAPIv1();
+#### Browser via CDN
 
-// Increment a counter
-const upResult = await counterV1.up('myspace', 'mycounter');
-console.log('Up:', upResult.value);
+```html
+<script src="https://cdn.jsdelivr.net/npm/counterapi/dist/counter.browser.min.js"></script>
+<script>
+  // Counter is available as a global variable
+  const counter = new Counter({ workspace: 'my-workspace' });
+</script>
+```
 
-// Decrement a counter
-const downResult = await counterV1.down('myspace', 'mycounter');
-console.log('Down:', downResult.value);
+### Creating a Client
 
-// Get current value
-const getResult = await counterV1.get('myspace', 'mycounter');
-console.log('Get:', getResult.value);
+```js
+// For v1 API
+const counterV1 = new Counter({
+  version: 'v1',       // Use v1 API
+  namespace: 'my-app', // Your namespace
+  debug: false,        // Optional: Enable debug logging
+  timeout: 5000        // Optional: Request timeout in ms (default: 10000)
+});
 
-// Set the counter to a specific value
-const setResult = await counterV1.set('myspace', 'mycounter', 42);
-console.log('Set:', setResult.value);
+// For v2 API (default)
+const counterV2 = new Counter({
+  workspace: 'my-workspace', // Your workspace name
+  debug: false,              // Optional: Enable debug logging
+  timeout: 5000              // Optional: Request timeout in ms (default: 10000)
+});
 ```
 
 ### API Methods
 
-#### v2 (CounterAPI)
-- `up(workspace, name)`
-- `down(workspace, name)`
-- `get(workspace, name)`
-- `reset(workspace, name)`
-- `stats(workspace, name)`
+#### Get Counter
 
-#### v1 (CounterAPIv1)
-- `up(namespace, name)`
-- `down(namespace, name)`
-- `get(namespace, name)`
-- `set(namespace, name, value)`
+```js
+// Get the current value of a counter
+const counter = await counterClient.get('page-views');
+console.log(`Current count: ${counter.value}`);
+```
 
-All methods return a Promise with the counter response.
+#### Increment Counter
+
+```js
+// Increment a counter by 1
+const counter = await counterClient.up('page-views');
+console.log(`New count after increment: ${counter.value}`);
+```
+
+#### Decrement Counter
+
+```js
+// Decrement a counter by 1
+const counter = await counterClient.down('page-views');
+console.log(`New count after decrement: ${counter.value}`);
+```
+
+#### Set Counter Value (V1 API only)
+
+```js
+// Set a counter to a specific value
+const counter = await counterV1.set('page-views', 100);
+console.log(`Counter set to: ${counter.value}`);
+```
+
+#### Reset Counter (V2 API only)
+
+```js
+// Reset a counter to 0
+const counter = await counterV2.reset('page-views');
+console.log(`Counter reset to: ${counter.value}`);
+```
+
+#### Get Counter Stats (V2 API only)
+
+```js
+// Get statistics for a counter
+const stats = await counterV2.stats('page-views');
+console.log(`Current value: ${stats.value}`);
+console.log(`Total hits: ${stats.stats.hits}`);
+console.log('Usage by date:', stats.stats.dates);
+```
+
+### Response Type
+
+All API methods return a Promise that resolves to a counter response object:
+
+```js
+{
+  value: 42,              // Current counter value
+  name: 'page-views',     // Counter name
+  namespace: 'my-app',    // Namespace or workspace
+  created: '2023-...',    // Creation timestamp
+  updated: '2023-...'     // Last updated timestamp
+}
+```
+
+The `stats()` method in v2 API also includes a `stats` property:
+
+```js
+{
+  // ... standard counter fields
+  stats: {
+    hits: 42,             // Total number of hits
+    dates: {              // Usage by date
+      '2023-01-01': 5,
+      '2023-01-02': 10
+      // ...
+    }
+  }
+}
+```
+
+## Error Handling
+
+Use standard Promise error handling:
+
+```js
+try {
+  const counter = await counterClient.up('page-views');
+} catch (error) {
+  console.error('Error:', error.message);
+  console.error('Status:', error.status);
+  console.error('Code:', error.code);
+}
+```
+
+## Examples
+
+See the [examples](./examples) directory for more usage examples.
 
 ## License
 
-[MIT](https://github.com/counterapi/counter-js/blob/master/LICENSE)
+MIT

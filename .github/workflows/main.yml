@@ -50,10 +50,10 @@ jobs:
       
     - name: Test build output
       run: |
-        test -f dist/counterapi.js
-        test -f dist/counterapi.esm.js
-        test -f dist/counterapi.browser.js
-        test -f dist/counterapi.browser.min.js
+        test -f dist/usertune.js
+        test -f dist/usertune.esm.js
+        test -f dist/usertune.browser.js
+        test -f dist/usertune.browser.min.js
         test -d dist/types
 
   security:

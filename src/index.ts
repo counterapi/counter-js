@@ -1,14 +1,12 @@
 // Main exports
-export { CounterAPI, CounterAPIv1 } from './client/index.js';
+export { Counter, CounterClient } from './client/index.js';
 
 // Type exports
 export type {
-  CounterOptions,
-  CounterData,
-  CounterStats,
+  CounterConfig,
   CounterResponse,
-  CounterResponseV1,
-  CounterNamespaceV1,
+  CounterStatsResponse,
   HttpClient,
-  ApiError
+  ApiError,
+  ApiConfig
 } from './types/index.js'; 

@@ -1,17 +1,17 @@
 {
   "name": "counterapi",
-  "version": "2.0.11",
-  "description": "JavaScript/TypeScript wrapper for CounterAPI (https://counterapi.dev) supporting v1 and v2 endpoints.",
+  "version": "2.1.0",
+  "description": "JavaScript library for CounterAPI (node & browser)",
   "type": "module",
-  "main": "dist/counterapi.js",
-  "module": "dist/counterapi.esm.js",
-  "browser": "dist/counterapi.browser.js",
+  "main": "dist/counter.js",
+  "module": "dist/counter.esm.js",
+  "browser": "dist/counter.browser.js",
   "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/counterapi.esm.js",
-      "require": "./dist/counterapi.js",
-      "browser": "./dist/counterapi.browser.js",
+      "import": "./dist/counter.esm.js",
+      "require": "./dist/counter.js",
+      "browser": "./dist/counter.browser.js",
       "types": "./dist/types/index.d.ts"
     },
     "./package.json": "./package.json"
@@ -27,20 +27,24 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --ext .ts --fix",
-    "typecheck": "tsc --noEmit"
+    "test:integration": "cross-env RUN_INTEGRATION_TESTS=true jest src/integration.test.ts",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "typecheck": "tsc --noEmit",
+    "dev": "rollup -c -w",
+    "prepublishOnly": "npm run build && npm run test && npm run lint"
   },
   "keywords": [
     "counterapi",
     "counter",
+    "hit counter",
     "api",
-    "typescript"
+    "javascript",
+    "typescript",
+    "sdk"
   ],
   "author": {
-    "name": "CounterAPI",
-    "email": "support@counterapi.dev",
-    "url": "https://counterapi.dev"
+    "name": "CounterAPI"
   },
   "license": "MIT",
   "repository": {
@@ -54,24 +58,26 @@
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {
-    "axios": "^1.10.0"
-  },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.0",
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-terser": "^0.4.4",
-    "@rollup/plugin-typescript": "^12.0.0",
-    "@types/jest": "^30.0.0",
+    "@rollup/plugin-typescript": "^11.1.5",
+    "@types/jest": "^29.5.8",
+    "@types/node": "^22.0.0",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
-    "eslint": "^8.0.0",
-    "jest": "^30.0.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.53.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "rollup": "^4.3.0",
-    "rollup-plugin-polyfill-node": "^0.13.0",
-    "ts-jest": "^29.0.0",
+    "ts-jest": "^29.1.1",
     "tslib": "^2.8.1",
-    "typescript": "^5.0.0"
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "axios": "^1.9.0"
   },
   "engines": {
     "node": ">=14"

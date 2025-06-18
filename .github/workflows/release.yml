@@ -77,10 +77,10 @@ jobs:
       
     - name: Verify build output
       run: |
-        test -f dist/counterapi.js
-        test -f dist/counterapi.esm.js
-        test -f dist/counterapi.browser.js
-        test -f dist/counterapi.browser.min.js
+        test -f dist/usertune.js
+        test -f dist/usertune.esm.js
+        test -f dist/usertune.browser.js
+        test -f dist/usertune.browser.min.js
         test -d dist/types
         
     - name: Commit version bump
@@ -112,7 +112,7 @@ jobs:
           CHANGELOG+=$(git log --pretty=format:"- %s (%h)" $LAST_TAG..HEAD)
         else
           CHANGELOG="## Initial Release"$'\n'
-          CHANGELOG+="- First release of counter.js"
+          CHANGELOG+="- First release of usertune.js"
         fi
         
         # Add custom release notes if provided
@@ -147,4 +147,4 @@ jobs:
         body: ${{ steps.changelog.outputs.changelog }}
         draft: false
         prerelease: false
-        files: ./count.js-${{ steps.version.outputs.version }}.tgz
+        files: ./usertune.js-${{ steps.version.outputs.version }}.tgz 

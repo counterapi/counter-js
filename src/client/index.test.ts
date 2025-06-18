@@ -1,5 +1,6 @@
-import { CounterAPI, CounterAPIv1 } from './index.js';
-import { HttpClient } from '../types/index.js';
+import { Counter } from './index.js';
+import { HttpClient, CounterResponse } from '../types/index.js';
+import { API_CONFIG } from '../http/index.js';
 
 // Mock HTTP client for testing
 class MockHttpClient implements HttpClient {
@@ -28,22 +29,12 @@ class MockHttpClient implements HttpClient {
     return response;
   }
 
-  async put<T = any>(url: string, data?: any, config?: any): Promise<T> {
-    this.requests.push({ method: 'PUT', url, data, config });
-    const response = this.responses.get(`PUT:${url}`);
-    if (!response) {
-      throw new Error(`No mock response for PUT:${url}`);
+  createUrl(endpoint: string, params: Record<string, string | number>): string {
+    let url = endpoint;
+    for (const [key, value] of Object.entries(params)) {
+      url = url.replace(`{${key}}`, String(value));
     }
-    return response;
-  }
-
-  async delete<T = any>(url: string, config?: any): Promise<T> {
-    this.requests.push({ method: 'DELETE', url, config });
-    const response = this.responses.get(`DELETE:${url}`);
-    if (!response) {
-      throw new Error(`No mock response for DELETE:${url}`);
-    }
-    return response;
+    return url;
   }
 
   clear() {
@@ -52,80 +43,179 @@ class MockHttpClient implements HttpClient {
   }
 }
 
-describe('CounterAPI', () => {
-  let client: CounterAPI;
+describe('Counter', () => {
+  let v1Client: Counter;
+  let v2Client: Counter;
   let mockHttp: MockHttpClient;
 
   beforeEach(() => {
     mockHttp = new MockHttpClient();
-    client = new CounterAPI();
-    // Replace the HTTP client with our mock
-    (client as any).http = mockHttp;
+    
+    v1Client = new Counter({
+      version: 'v1',
+      namespace: 'test-namespace'
+    });
+    
+    v2Client = new Counter({
+      version: 'v2',
+      namespace: 'test-workspace'
+    });
+    
+    // Replace the HTTP clients with our mock
+    (v1Client as any).http = mockHttp;
+    (v2Client as any).http = mockHttp;
   });
 
   describe('constructor', () => {
-    it('should create client with default config', () => {
-      expect(client).toBeInstanceOf(CounterAPI);
+    it('should throw error if namespace is missing', () => {
+      expect(() => new Counter({ version: 'v1', namespace: '' }))
+        .toThrow('Namespace/Workspace is required');
+    });
+
+    it('should create v1 client with valid config', () => {
+      const client = new Counter({
+        version: 'v1',
+        namespace: 'test-namespace'
+      });
+      expect(client).toBeInstanceOf(Counter);
+    });
+    
+    it('should create v2 client with valid config', () => {
+      const client = new Counter({
+        version: 'v2',
+        namespace: 'test-workspace'
+      });
+      expect(client).toBeInstanceOf(Counter);
     });
   });
 
-  describe('up()', () => {
-    const mockUpResponse = { code: "200", data: { id: "1", up_count: 1 } };
+  describe('v1 API', () => {
+    const mockResponse: CounterResponse = {
+      value: 42,
+      name: 'test-counter',
+      namespace: 'test-namespace',
+      created: '2023-01-01T00:00:00Z',
+      updated: '2023-01-01T01:00:00Z'
+    };
 
     beforeEach(() => {
-      mockHttp.setResponse('GET:/workspace/test-workspace/test-counter/up', mockUpResponse);
+      // Set up mock responses for the v1 API endpoints
+      const getUrl = '/{namespace}/{name}';
+      const upUrl = '/{namespace}/{name}/up';
+      const downUrl = '/{namespace}/{name}/down';
+      const setUrl = '/{namespace}/{name}/?count={value}';
+      
+      mockHttp.setResponse(`GET:${getUrl.replace('{namespace}', 'test-namespace').replace('{name}', 'test-counter')}`, mockResponse);
+      mockHttp.setResponse(`GET:${upUrl.replace('{namespace}', 'test-namespace').replace('{name}', 'test-counter')}`, { ...mockResponse, value: 43 });
+      mockHttp.setResponse(`GET:${downUrl.replace('{namespace}', 'test-namespace').replace('{name}', 'test-counter')}`, { ...mockResponse, value: 41 });
+      mockHttp.setResponse(`GET:${setUrl.replace('{namespace}', 'test-namespace').replace('{name}', 'test-counter').replace('{value}', '100')}`, { ...mockResponse, value: 100 });
     });
 
-    it('should increment counter', async () => {
-      const result = await client.up('test-workspace', 'test-counter');
-
-      expect(result).toEqual(mockUpResponse);
+    it('should get a counter', async () => {
+      const result = await v1Client.get('test-counter');
+      expect(result).toEqual(mockResponse);
       expect(mockHttp.requests).toHaveLength(1);
-      expect(mockHttp.requests[0]).toEqual({
-        method: 'GET',
-        url: '/workspace/test-workspace/test-counter/up',
-        config: undefined
-      });
+    });
+
+    it('should increment a counter', async () => {
+      const result = await v1Client.up('test-counter');
+      expect(result).toEqual({ ...mockResponse, value: 43 });
+      expect(mockHttp.requests).toHaveLength(1);
+    });
+
+    it('should decrement a counter', async () => {
+      const result = await v1Client.down('test-counter');
+      expect(result).toEqual({ ...mockResponse, value: 41 });
+      expect(mockHttp.requests).toHaveLength(1);
+    });
+
+    it('should set a counter to specific value', async () => {
+      const result = await v1Client.set('test-counter', 100);
+      expect(result).toEqual({ ...mockResponse, value: 100 });
+      expect(mockHttp.requests).toHaveLength(1);
+    });
+
+    it('should throw error for empty counter name', async () => {
+      await expect(v1Client.get('')).rejects.toThrow('Counter name is required');
+    });
+    
+    it('should throw error when using v2 methods on v1 client', async () => {
+      await expect(v1Client.reset('test-counter')).rejects.toThrow('reset method is only available in v2');
+      await expect(v1Client.stats('test-counter')).rejects.toThrow('stats method is only available in v2');
     });
   });
-
-  describe('down()', () => {
-    const mockDownResponse = { code: "200", data: { id: "1", down_count: 1 } };
-
-    beforeEach(() => {
-      mockHttp.setResponse('GET:/workspace/test-workspace/test-counter/down', mockDownResponse);
-    });
-
-    it('should decrement counter', async () => {
-      const result = await client.down('test-workspace', 'test-counter');
-
-      expect(result).toEqual(mockDownResponse);
-      expect(mockHttp.requests).toHaveLength(1);
-      expect(mockHttp.requests[0]).toEqual({
-        method: 'GET',
-        url: '/workspace/test-workspace/test-counter/down',
-        config: undefined
-      });
-    });
-  });
-
-  describe('get()', () => {
-    const mockGetResponse = { code: "200", data: { id: "1", up_count: 1, down_count: 0 } };
+  
+  describe('v2 API', () => {
+    const mockResponse: CounterResponse = {
+      value: 42,
+      name: 'test-counter',
+      namespace: 'test-workspace',
+      created: '2023-01-01T00:00:00Z',
+      updated: '2023-01-01T01:00:00Z'
+    };
+    
+    const mockStatsResponse = {
+      ...mockResponse,
+      stats: {
+        hits: 100,
+        dates: {
+          '2023-01-01': 50,
+          '2023-01-02': 50
+        }
+      }
+    };
 
     beforeEach(() => {
-      mockHttp.setResponse('GET:/workspace/test-workspace/test-counter', mockGetResponse);
+      // Set up mock responses for the v2 API endpoints
+      const getUrl = '/{workspace}/{name}';
+      const upUrl = '/{workspace}/{name}/up';
+      const downUrl = '/{workspace}/{name}/down';
+      const resetUrl = '/{workspace}/{name}/reset';
+      const statsUrl = '/{workspace}/{name}/stats';
+      
+      mockHttp.setResponse(`GET:${getUrl.replace('{workspace}', 'test-workspace').replace('{name}', 'test-counter')}`, mockResponse);
+      mockHttp.setResponse(`GET:${upUrl.replace('{workspace}', 'test-workspace').replace('{name}', 'test-counter')}`, { ...mockResponse, value: 43 });
+      mockHttp.setResponse(`GET:${downUrl.replace('{workspace}', 'test-workspace').replace('{name}', 'test-counter')}`, { ...mockResponse, value: 41 });
+      mockHttp.setResponse(`GET:${resetUrl.replace('{workspace}', 'test-workspace').replace('{name}', 'test-counter')}`, { ...mockResponse, value: 0 });
+      mockHttp.setResponse(`GET:${statsUrl.replace('{workspace}', 'test-workspace').replace('{name}', 'test-counter')}`, mockStatsResponse);
     });
 
-    it('should get counter', async () => {
-      const result = await client.get('test-workspace', 'test-counter');
-
-      expect(result).toEqual(mockGetResponse);
+    it('should get a counter', async () => {
+      const result = await v2Client.get('test-counter');
+      expect(result).toEqual(mockResponse);
       expect(mockHttp.requests).toHaveLength(1);
-      expect(mockHttp.requests[0]).toEqual({
-        method: 'GET',
-        url: '/workspace/test-workspace/test-counter',
-        config: undefined
-      });
+    });
+
+    it('should increment a counter', async () => {
+      const result = await v2Client.up('test-counter');
+      expect(result).toEqual({ ...mockResponse, value: 43 });
+      expect(mockHttp.requests).toHaveLength(1);
+    });
+
+    it('should decrement a counter', async () => {
+      const result = await v2Client.down('test-counter');
+      expect(result).toEqual({ ...mockResponse, value: 41 });
+      expect(mockHttp.requests).toHaveLength(1);
+    });
+
+    it('should reset a counter', async () => {
+      const result = await v2Client.reset('test-counter');
+      expect(result).toEqual({ ...mockResponse, value: 0 });
+      expect(mockHttp.requests).toHaveLength(1);
+    });
+    
+    it('should get counter stats', async () => {
+      const result = await v2Client.stats('test-counter');
+      expect(result).toEqual(mockStatsResponse);
+      expect(mockHttp.requests).toHaveLength(1);
+    });
+
+    it('should throw error for empty counter name', async () => {
+      await expect(v2Client.get('')).rejects.toThrow('Counter name is required');
+    });
+    
+    it('should throw error when using v1 methods on v2 client', async () => {
+      await expect(v2Client.set('test-counter', 100)).rejects.toThrow('set method is only available in v1');
     });
   });
 }); 

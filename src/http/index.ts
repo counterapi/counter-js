@@ -1,56 +1,70 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { HttpClientConfig } from '../types/index.js';
+import { HttpClient, ApiError, ApiConfig } from '../types/index.js';
 
 /**
- * HTTP client implementation using Axios
+ * API Configuration
  */
-export class AxiosHttpClient {
-  private client: AxiosInstance;
-  private config: HttpClientConfig;
+export const API_CONFIG: ApiConfig = {
+  v1: {
+    baseUrl: 'https://api.counterapi.dev/v1',
+    endpoints: {
+      up: '/{namespace}/{name}/up',
+      down: '/{namespace}/{name}/down',
+      get: '/{namespace}/{name}',
+      set: '/{namespace}/{name}/?count={value}',
+    },
+  },
+  v2: {
+    baseUrl: 'https://api.counterapi.dev/v2',
+    endpoints: {
+      up: '/{workspace}/{name}/up',
+      down: '/{workspace}/{name}/down',
+      get: '/{workspace}/{name}',
+      reset: '/{workspace}/{name}/reset',
+      stats: '/{workspace}/{name}/stats',
+    },
+  },
+};
 
-  constructor(config: HttpClientConfig = {}) {
-    this.config = {
-      baseURL: config.baseURL || 'https://api.counterapi.dev/v2',
-      debug: config.debug || false,
+/**
+ * Axios-based HTTP client implementation
+ */
+export class AxiosHttpClient implements HttpClient {
+  private client: AxiosInstance;
+  private version: 'v1' | 'v2';
+
+  constructor(config: {
+    version: 'v1' | 'v2';
+    timeout?: number;
+    debug?: boolean;
+  }) {
+    this.version = config.version;
+    
+    this.client = axios.create({
+      baseURL: API_CONFIG[this.version].baseUrl,
       timeout: config.timeout || 10000,
       headers: {
-        'Content-Type': 'application/json',
-        ...(config.headers || {})
-      },
-      ...config
-    };
-
-    // Create axios instance
-    this.client = axios.create({
-      baseURL: this.config.baseURL,
-      timeout: this.config.timeout,
-      headers: this.config.headers
+        'Content-Type': 'application/json'
+      }
     });
 
     // Request interceptor for debugging
-    this.client.interceptors.request.use(
-      (config) => {
-        if (this.config.debug) {
-          console.log('[CounterAPI] Request:', {
-            method: config.method,
-            url: config.url,
-            data: config.data
-          });
-        }
-        return config;
-      },
-      (error) => {
-        if (this.config.debug) {
-          console.error('[CounterAPI] Request Error:', error);
-        }
-        return Promise.reject(error);
-      }
-    );
+    if (config.debug) {
+      this.client.interceptors.request.use((request) => {
+        console.log('[CounterAPI] Request:', {
+          method: request.method?.toUpperCase(),
+          url: request.url,
+          headers: request.headers,
+          data: request.data
+        });
+        return request;
+      });
+    }
 
     // Response interceptor for debugging and error handling
     this.client.interceptors.response.use(
-      (response) => {
-        if (this.config.debug) {
+      (response: AxiosResponse) => {
+        if (config.debug) {
           console.log('[CounterAPI] Response:', {
             status: response.status,
             data: response.data
@@ -59,12 +73,39 @@ export class AxiosHttpClient {
         return response;
       },
       (error) => {
-        if (this.config.debug) {
-          console.error('[CounterAPI] Response Error:', error);
+        if (config.debug) {
+          console.log('[CounterAPI] Error:', {
+            status: error.response?.status,
+            data: error.response?.data,
+            message: error.message
+          });
         }
-        return Promise.reject(error);
+
+        // Transform axios error to our custom error format
+        const apiError: ApiError = {
+          message: error.response?.data?.message || error.message || 'Request failed',
+          status: error.response?.status,
+          code: error.response?.data?.code || error.code,
+          details: error.response?.data
+        };
+
+        throw apiError;
       }
     );
+  }
+
+  /**
+   * Creates a URL by replacing placeholders in the endpoint pattern
+   */
+  createUrl(endpoint: string, params: Record<string, string | number>): string {
+    let url = endpoint;
+    
+    // Replace named parameters in URL pattern
+    for (const [key, value] of Object.entries(params)) {
+      url = url.replace(`{${key}}`, String(value));
+    }
+    
+    return url;
   }
 
   async get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
@@ -74,16 +115,6 @@ export class AxiosHttpClient {
 
   async post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
     const response = await this.client.post<T>(url, data, config);
-    return response.data;
-  }
-
-  async put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
-    const response = await this.client.put<T>(url, data, config);
-    return response.data;
-  }
-
-  async delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    const response = await this.client.delete<T>(url, config);
     return response.data;
   }
 } 

@@ -19,9 +19,10 @@
       ]
     },
     {
-      "enabled": false,
+      "enabled": true,
+      "automerge": false,
       "matchUpdateTypes": [
-        "patch"
+        "major"
       ]
     }
   ]

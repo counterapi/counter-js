@@ -35,7 +35,7 @@ export default [
     input: 'src/index.ts',
     external,
     output: {
-      file: 'dist/counterapi.esm.js',
+      file: 'dist/counter.esm.js',
       format: 'es',
       sourcemap: true
     },
@@ -47,7 +47,7 @@ export default [
     input: 'src/index.ts',
     external,
     output: {
-      file: 'dist/counterapi.js',
+      file: 'dist/counter.js',
       format: 'cjs',
       sourcemap: true,
       exports: 'named'
@@ -55,33 +55,33 @@ export default [
     plugins
   },
   
-  // Browser build (unminified)
+  // Browser build (unminified, with axios bundled)
   {
     input: 'src/browser.ts',
     output: {
-      file: 'dist/counterapi.browser.js',
+      file: 'dist/counter.browser.js',
       format: 'umd',
-      name: 'CounterAPI',
+      name: 'Counter',
       sourcemap: true,
       exports: 'default',
       globals: {
-        'counterapi.js': 'CounterAPI'
+        'counterapi.js': 'Counter'
       }
     },
     plugins: browserPlugins
   },
 
-  // Browser build (minified)
+  // Browser build (minified, with axios bundled)
   {
     input: 'src/browser.ts',
     output: {
-      file: 'dist/counterapi.browser.min.js',
+      file: 'dist/counter.browser.min.js',
       format: 'umd',
-      name: 'CounterAPI',
+      name: 'Counter',
       sourcemap: true,
       exports: 'default',
       globals: {
-        'counterapi.js': 'CounterAPI'
+        'counterapi.js': 'Counter'
       }
     },
     plugins: [

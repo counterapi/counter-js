@@ -3,180 +3,320 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CounterAPI Browser Demo</title>
+    <title>CounterAPI Browser Example</title>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
             line-height: 1.6;
         }
-        .counter {
-            background: #f5f5f5;
-            padding: 20px;
+        h1 {
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .counter-container {
+            background-color: #f8f9fa;
             border-radius: 8px;
+            padding: 20px;
             margin: 20px 0;
         }
-        .counter h2 {
-            margin-top: 0;
+        .counter-values {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 20px 0;
+        }
+        .counter-box {
+            text-align: center;
+        }
+        .counter-box h3 {
+            margin: 0;
+            color: #555;
+            font-size: 1rem;
         }
         .counter-value {
-            font-size: 24px;
+            font-size: 2.5rem;
             font-weight: bold;
+            color: #0366d6;
             margin: 10px 0;
         }
         .counter-buttons {
             display: flex;
             gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
         }
         button {
-            padding: 8px 16px;
+            background-color: #0366d6;
+            color: white;
             border: none;
             border-radius: 4px;
-            background: #007bff;
-            color: white;
-            cursor: pointer;
+            padding: 8px 16px;
             font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
         button:hover {
-            background: #0056b3;
+            background-color: #0250a0;
+        }
+        button:active {
+            background-color: #013d7e;
         }
         button:disabled {
-            background: #ccc;
+            background-color: #ccc;
             cursor: not-allowed;
         }
-        .error {
-            color: #dc3545;
-            margin: 10px 0;
+        .response {
+            background-color: #f1f8ff;
+            border: 1px solid #c8e1ff;
+            border-radius: 4px;
+            padding: 10px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 20px;
         }
-        .success {
-            color: #28a745;
-            margin: 10px 0;
+        .input-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
         }
-        .loading {
-            color: #6c757d;
-            margin: 10px 0;
+        input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            flex: 1;
+        }
+        label {
+            width: 100px;
         }
     </style>
 </head>
 <body>
-    <h1>CounterAPI Browser Demo</h1>
-
-    <div class="test-section">
-        <h3>📦 Library Loading Test</h3>
-        <div id="loading-status" class="loading">⏳ Loading library...</div>
-    </div>
-
-    <div class="counter">
-        <h2>Counter</h2>
-        <div class="counter-value" id="counter-value">0</div>
-        <div class="counter-buttons">
-            <button id="increment" disabled>Increment</button>
-            <button id="decrement" disabled>Decrement</button>
-            <button id="reset" disabled>Reset</button>
-        </div>
-        <div id="status" class="success"></div>
-    </div>
-
-    <!-- Load the script -->
-<!--     <script src="https://cdn.jsdelivr.net/npm/counterapi@v2.0.11/dist/counterapi.browser.min.js"></script>-->
-    <script src="../../dist/counterapi.browser.min.js"></script>
+    <h1>CounterAPI Browser Example</h1>
     
+    <div class="input-row">
+        <label for="workspace">Workspace:</label>
+        <input type="text" id="workspace" value="test" placeholder="Enter workspace name">
+    </div>
+    
+    <div class="input-row">
+        <label for="counter">Counter:</label>
+        <input type="text" id="counter" value="test" placeholder="Enter counter name">
+    </div>
+
+    <div class="counter-container">
+        <div class="counter-values">
+            <div class="counter-box">
+                <h3>Up Count</h3>
+                <div class="counter-value" id="up-count">-</div>
+            </div>
+            <div class="counter-box">
+                <h3>Down Count</h3>
+                <div class="counter-value" id="down-count">-</div>
+            </div>
+        </div>
+        
+        <div class="counter-buttons">
+            <button id="btn-up">Up (+1)</button>
+            <button id="btn-down">Down (-1)</button>
+            <button id="btn-get">Get Value</button>
+            <button id="btn-reset">Reset</button>
+            <button id="btn-stats">Get Stats</button>
+        </div>
+        
+        <div class="response" id="response-area">// API response will appear here</div>
+    </div>
+
+    <!-- Load the CounterAPI library from CDN (in production) or local build (for development) -->
     <script>
-        // Utility functions
-        function setStatus(elementId, message, className = 'info') {
-            const element = document.getElementById(elementId);
-            if (element) {
-                element.innerHTML = message;
-                element.className = className;
+        // Check if we're in development or production
+        const isDev = window.location.hostname === 'localhost' || 
+                     window.location.hostname === '127.0.0.1';
+        
+        // Create script element
+        const script = document.createElement('script');
+        script.async = true;
+        
+        if (isDev) {
+            // For local development use the local build
+            script.src = '../../dist/counter.browser.js';
+        } else {
+            // For production use the CDN
+            script.src = 'https://cdn.jsdelivr.net/npm/counterapi/dist/counter.browser.js';
+        }
+        
+        // When script is loaded, initialize the application
+        script.onload = initApp;
+        
+        // Append the script to the document
+        document.head.appendChild(script);
+
+        // Initialize the application
+        function initApp() {
+            if (typeof Counter === 'undefined') {
+                console.error('CounterAPI library not loaded');
+                document.getElementById('response-area').textContent = 'Error: CounterAPI library not loaded';
+                return;
             }
-        }
 
-        function enableButtons(enable) {
-            document.getElementById('increment').disabled = !enable;
-            document.getElementById('decrement').disabled = !enable;
-            document.getElementById('reset').disabled = !enable;
-        }
+            // Get DOM elements
+            const workspaceInput = document.getElementById('workspace');
+            const counterInput = document.getElementById('counter');
+            const upCountElement = document.getElementById('up-count');
+            const downCountElement = document.getElementById('down-count');
+            const responseArea = document.getElementById('response-area');
+            const upButton = document.getElementById('btn-up');
+            const downButton = document.getElementById('btn-down');
+            const getButton = document.getElementById('btn-get');
+            const resetButton = document.getElementById('btn-reset');
+            const statsButton = document.getElementById('btn-stats');
 
-        // Test if library loaded
-        function testLibraryLoading() {
-            try {
-                console.log('CounterAPI object:', window.CounterAPI);
-                console.log('CounterAPI type:', typeof window.CounterAPI);
+            // Create a Counter instance
+            let counter = new Counter({
+                workspace: workspaceInput.value
+            });
 
-                if (typeof window.CounterAPI === 'function') {
-                    setStatus('loading-status', '✅ Library loaded successfully!', 'success');
-                    initializeCounter();
-                } else {
-                    setStatus('loading-status', `❌ Library not found! Type: ${typeof window.CounterAPI}`, 'error');
-                    console.log('Available keys:', Object.keys(window.CounterAPI || {}));
-                }
-            } catch (error) {
-                setStatus('loading-status', `❌ Error: ${error.message}`, 'error');
-            }
-        }
-
-        // Initialize counter
-        function initializeCounter() {
-            try {
-                const counter = new window.CounterAPI();
-                const workspace = 'test';
-                const name = 'test';
-                
-                // Update counter function
-                async function updateCounter() {
-                    try {
-                        const result = await counter.get(workspace, name);
-                        document.getElementById('counter-value').textContent = result.data.up_count;
-                        setStatus('status', 'Counter updated successfully!', 'success');
-                    } catch (error) {
-                        setStatus('status', `Error: ${error.message}`, 'error');
-                    }
-                }
-                
-                // Add event listeners
-                document.getElementById('increment').addEventListener('click', async () => {
-                    try {
-                        await counter.up(workspace, name);
-                        await updateCounter();
-                    } catch (error) {
-                        setStatus('status', `Error: ${error.message}`, 'error');
-                    }
+            // Update counter instance when workspace changes
+            workspaceInput.addEventListener('change', () => {
+                counter = new Counter({
+                    workspace: workspaceInput.value
                 });
-
-                document.getElementById('decrement').addEventListener('click', async () => {
-                    try {
-                        await counter.down(workspace, name);
-                        await updateCounter();
-                    } catch (error) {
-                        setStatus('status', `Error: ${error.message}`, 'error');
-                    }
-                });
-
-                document.getElementById('reset').addEventListener('click', async () => {
-                    try {
-                        await counter.reset(workspace, name);
-                        await updateCounter();
-                    } catch (error) {
-                        setStatus('status', `Error: ${error.message}`, 'error');
-                    }
-                });
-
-                // Initial counter update
                 updateCounter();
+            });
+
+            // Button event listeners
+            upButton.addEventListener('click', incrementCounter);
+            downButton.addEventListener('click', decrementCounter);
+            getButton.addEventListener('click', updateCounter);
+            resetButton.addEventListener('click', resetCounter);
+            statsButton.addEventListener('click', getStats);
+
+            // Get initial counter value
+            updateCounter();
+
+            // Increment counter
+            async function incrementCounter() {
+                setLoading(true);
+                try {
+                    const result = await counter.up(counterInput.value);
+                    updateUI(result);
+                } catch (error) {
+                    handleError(error);
+                }
+                setLoading(false);
+            }
+
+            // Decrement counter
+            async function decrementCounter() {
+                setLoading(true);
+                try {
+                    const result = await counter.down(counterInput.value);
+                    updateUI(result);
+                } catch (error) {
+                    handleError(error);
+                }
+                setLoading(false);
+            }
+
+            // Update counter display
+            async function updateCounter() {
+                setLoading(true);
+                try {
+                    const result = await counter.get(counterInput.value);
+                    updateUI(result);
+                } catch (error) {
+                    handleError(error);
+                }
+                setLoading(false);
+            }
+
+            // Reset counter
+            async function resetCounter() {
+                setLoading(true);
+                try {
+                    const result = await counter.reset(counterInput.value);
+                    updateUI(result);
+                } catch (error) {
+                    handleError(error);
+                }
+                setLoading(false);
+            }
+
+            // Get counter stats
+            async function getStats() {
+                setLoading(true);
+                try {
+                    const result = await counter.stats(counterInput.value);
+                    updateUI(result);
+                } catch (error) {
+                    handleError(error);
+                }
+                setLoading(false);
+            }
+
+            // Update UI with response
+            function updateUI(result) {
+                // Format the JSON with 2 spaces of indentation
+                responseArea.textContent = JSON.stringify(result, null, 2);
                 
-                // Enable buttons
-                enableButtons(true);
-            } catch (error) {
-                setStatus('loading-status', `❌ Error initializing counter: ${error.message}`, 'error');
+                // Extract data from different response formats
+                let data = result;
+                
+                // Handle nested data structure if present
+                if (result && result.data) {
+                    data = result.data;
+                }
+                
+                // Update counter value displays
+                if (data) {
+                    // For v2 API responses with up_count and down_count
+                    if (data.up_count !== undefined) {
+                        upCountElement.textContent = data.up_count;
+                    }
+                    
+                    if (data.down_count !== undefined) {
+                        downCountElement.textContent = data.down_count;
+                    }
+                    
+                    // For v1 API responses or other formats
+                    if (data.up_count === undefined && data.down_count === undefined) {
+                        if (data.count !== undefined) {
+                            upCountElement.textContent = data.count;
+                            downCountElement.textContent = '0';
+                        } else if (data.value !== undefined) {
+                            upCountElement.textContent = data.value;
+                            downCountElement.textContent = '0';
+                        }
+                    }
+                }
+            }
+
+            // Handle errors
+            function handleError(error) {
+                console.error('CounterAPI error:', error);
+                responseArea.textContent = 'Error: ' + (error.message || JSON.stringify(error));
+                upCountElement.textContent = '?';
+                downCountElement.textContent = '?';
+            }
+
+            // Set loading state
+            function setLoading(isLoading) {
+                const buttons = [upButton, downButton, getButton, resetButton, statsButton];
+                if (isLoading) {
+                    buttons.forEach(btn => btn.disabled = true);
+                    responseArea.textContent = 'Loading...';
+                } else {
+                    buttons.forEach(btn => btn.disabled = false);
+                }
             }
         }
-
-        // Start tests when page loads
-        window.addEventListener('load', () => {
-            setTimeout(testLibraryLoading, 500); // Longer delay to ensure script loaded
-        });
     </script>
 </body>
 </html> 
